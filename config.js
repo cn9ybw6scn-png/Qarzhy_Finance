@@ -6,8 +6,8 @@ const CONFIG = {
   // 1. Supabase — тегін: supabase.com → жаңа жоба → Settings → API
   // ЕСКЕРТУ: тек "anon public" кілтін қой — ол клиент жақта ашық болуға арналған.
   // Кестелерге RLS (Row Level Security) қосылмаса, деректер қорғалмайды!
-  SUPABASE_URL: 'https://СІЗДІҢ_ID.supabase.co',
-  SUPABASE_KEY: 'СІЗДІҢ_ANON_KEY',
+  SUPABASE_URL: 'https://wwwcskgeziqlelgtoaxw.supabase.co',
+  SUPABASE_KEY: 'sb_publishable_yTHCrpbWJk7RoTcAje17yg_B4L5_V2c',
 
   // 2. NewsAPI — тегін: newsapi.org → тіркел → API key
   // ЕСКЕРТУ: NewsAPI тегін жоспары браузерден (production доменнен) тікелей
