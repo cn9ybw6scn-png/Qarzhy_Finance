@@ -269,6 +269,8 @@ nav{position:sticky;top:0;z-index:200;background:rgba(255,255,255,0.95);backdrop
   .sidebar{display:none}
 }
 </style>
+<script src="config.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 </head>
 <body>
 
@@ -291,8 +293,8 @@ nav{position:sticky;top:0;z-index:200;background:rgba(255,255,255,0.95);backdrop
       <span class="search-icon">⌕</span>
       <input type="text" placeholder="KASE, BTC, USD...">
     </div>
-    <button class="btn-login" onclick="openModal('login')">Кіру</button>
-    <button class="btn-signup" onclick="openModal('register')">Тіркелу</button>
+    <button class="btn-login" id="navLoginBtn" onclick="openModal('login')">Кіру</button>
+    <button class="btn-signup" id="navSignupBtn" onclick="openModal('register')">Тіркелу</button>
   </div>
 </div>
 </nav>
@@ -752,10 +754,11 @@ nav{position:sticky;top:0;z-index:200;background:rgba(255,255,255,0.95);backdrop
     <button class="modal-close" onclick="closeModal('register')">✕</button>
     <div class="modal-title">Qarzhy-ге тіркелу</div>
     <div class="modal-sub">Тегін тіркеліп, нарық деректеріне қол жеткіз</div>
-    <div class="form-group"><label class="form-label">Аты-жөні</label><input class="form-input" placeholder="Азамат Сейітқали"></div>
-    <div class="form-group"><label class="form-label">Email</label><input class="form-input" placeholder="azamat@email.com"></div>
-    <div class="form-group"><label class="form-label">Пароль</label><input class="form-input" type="password" placeholder="••••••••"></div>
-    <button class="form-btn" onclick="register()">Тіркелу →</button>
+    <div class="form-group"><label class="form-label">Аты-жөні</label><input class="form-input" id="regName" placeholder="Азамат Сейітқали"></div>
+    <div class="form-group"><label class="form-label">Email</label><input class="form-input" id="regEmail" type="email" placeholder="azamat@email.com"></div>
+    <div class="form-group"><label class="form-label">Пароль</label><input class="form-input" id="regPassword" type="password" placeholder="••••••••"></div>
+    <div class="form-error" id="regError" style="display:none;color:#DC2626;font-size:12px;margin-bottom:8px"></div>
+    <button class="form-btn" id="regSubmitBtn" onclick="doRegister()">Тіркелу →</button>
     <div class="form-link">Аккаунт бар ма? <a onclick="closeModal('register');openModal('login')">Кіру</a></div>
   </div>
 </div>
@@ -764,13 +767,14 @@ nav{position:sticky;top:0;z-index:200;background:rgba(255,255,255,0.95);backdrop
     <button class="modal-close" onclick="closeModal('login')">✕</button>
     <div class="modal-title">Кіру</div>
     <div class="modal-sub">Qarzhy аккаунтыңызға кіріңіз</div>
-    <div class="form-group"><label class="form-label">Email</label><input class="form-input" placeholder="email@mail.com"></div>
-    <div class="form-group"><label class="form-label">Пароль</label><input class="form-input" type="password" placeholder="••••••••"></div>
-    <button class="form-btn" onclick="register()">Кіру →</button>
+    <div class="form-group"><label class="form-label">Email</label><input class="form-input" id="loginEmail" type="email" placeholder="email@mail.com"></div>
+    <div class="form-group"><label class="form-label">Пароль</label><input class="form-input" id="loginPassword" type="password" placeholder="••••••••"></div>
+    <div class="form-error" id="loginError" style="display:none;color:#DC2626;font-size:12px;margin-bottom:8px"></div>
+    <button class="form-btn" id="loginSubmitBtn" onclick="doLogin()">Кіру →</button>
     <div class="form-link">Аккаунт жоқ па? <a onclick="closeModal('login');openModal('register')">Тіркелу</a></div>
   </div>
 </div>
-<div class="toast" id="toast"><span class="toast-icon">✓</span> Сәтті тіркелдіңіз! Qarzhy-ге қош келдіңіз</div>
+<div class="toast" id="toast"><span class="toast-icon">✓</span> <span id="toastMsg">Сәтті тіркелдіңіз! Qarzhy-ге қош келдіңіз</span></div>
 
 <script>
 // ═══════════════════════════════════════════════
@@ -1013,9 +1017,104 @@ function filterNews(btn,cat){
   });
 }
 function goto(id){document.getElementById(id)?.scrollIntoView({behavior:'smooth',block:'start'})}
-function openModal(t){document.getElementById(t+'Modal').classList.add('open');document.body.style.overflow='hidden'}
+
+// ── AUTH (Supabase) ──
+const sb = supabase.createClient(CONFIG.SUPABASE_URL, CONFIG.SUPABASE_KEY);
+let currentUser = null;
+let pendingFullName = null;
+
+function openModal(t){
+  if(t==='register' && currentUser){ return; } // тіркелген пайдаланушыға қайта сұрамаймыз
+  document.getElementById(t+'Modal').classList.add('open');
+  document.body.style.overflow='hidden';
+}
 function closeModal(t){document.getElementById(t+'Modal').classList.remove('open');document.body.style.overflow=''}
-function register(){closeModal('register');closeModal('login');const t=document.getElementById('toast');t.classList.add('show');setTimeout(()=>t.classList.remove('show'),3500)}
+
+function showToast(msg){
+  const t=document.getElementById('toast');
+  document.getElementById('toastMsg').textContent = msg;
+  t.classList.add('show');
+  setTimeout(()=>t.classList.remove('show'),3500);
+}
+function showFormError(id,msg){const el=document.getElementById(id);el.textContent=msg;el.style.display='block'}
+function hideFormError(id){document.getElementById(id).style.display='none'}
+
+async function doRegister(){
+  hideFormError('regError');
+  const name = document.getElementById('regName').value.trim();
+  const email = document.getElementById('regEmail').value.trim();
+  const password = document.getElementById('regPassword').value;
+  if(!email || !password){ showFormError('regError','Email және парольді толтырыңыз'); return; }
+  const btn = document.getElementById('regSubmitBtn');
+  btn.disabled = true; btn.textContent = 'Тіркелуде...';
+  const { data, error } = await sb.auth.signUp({ email, password });
+  btn.disabled = false; btn.textContent = 'Тіркелу →';
+  if(error){ showFormError('regError', error.message); return; }
+  pendingFullName = name || null;
+  closeModal('register');
+  if(data.session){
+    showToast('✓ Сәтті тіркелдіңіз! Qarzhy-ге қош келдіңіз');
+  } else {
+    showToast('✓ Тіркелу сәтті өтті! Email-ге жіберілген растау сілтемесін басыңыз');
+  }
+  await refreshAuthState();
+}
+
+async function doLogin(){
+  hideFormError('loginError');
+  const email = document.getElementById('loginEmail').value.trim();
+  const password = document.getElementById('loginPassword').value;
+  if(!email || !password){ showFormError('loginError','Email және парольді толтырыңыз'); return; }
+  const btn = document.getElementById('loginSubmitBtn');
+  btn.disabled = true; btn.textContent = 'Кіруде...';
+  const { error } = await sb.auth.signInWithPassword({ email, password });
+  btn.disabled = false; btn.textContent = 'Кіру →';
+  if(error){ showFormError('loginError', error.message); return; }
+  closeModal('login');
+  showToast('✓ Қош келдіңіз!');
+  await refreshAuthState();
+}
+
+async function doLogout(){
+  await sb.auth.signOut();
+  await refreshAuthState();
+  showToast('Сіз жүйеден шықтыңыз');
+}
+
+function renderAuthUI(){
+  const loginBtn = document.getElementById('navLoginBtn');
+  const signupBtn = document.getElementById('navSignupBtn');
+  if(currentUser){
+    loginBtn.style.display = 'none';
+    signupBtn.textContent = currentUser.email.split('@')[0] + ' · Шығу';
+    signupBtn.onclick = doLogout;
+  } else {
+    loginBtn.style.display = '';
+    signupBtn.textContent = 'Тіркелу';
+    signupBtn.onclick = () => openModal('register');
+  }
+}
+
+async function ensureProfile(){
+  if(!currentUser) return;
+  const { data } = await sb.from('profiles').select('id').eq('id', currentUser.id).maybeSingle();
+  if(!data){
+    await sb.from('profiles').insert({ id: currentUser.id, username: currentUser.email.split('@')[0], full_name: pendingFullName });
+    pendingFullName = null;
+  }
+}
+
+async function refreshAuthState(){
+  const { data: { session } } = await sb.auth.getSession();
+  currentUser = session?.user || null;
+  renderAuthUI();
+  await ensureProfile();
+}
+
+sb.auth.onAuthStateChange((_event, session) => {
+  currentUser = session?.user || null;
+  renderAuthUI();
+});
 
 function calcConv(){
   const amt = parseFloat(document.getElementById('convAmt').value)||0;
@@ -1041,6 +1140,7 @@ renderMarket();
 renderCrypto(null);
 renderTicker(null);
 calcConv();
+refreshAuthState();
 
 // API-ларды параллель жүктеу
 Promise.all([fetchCrypto(), fetchCurrency(), fetchFearGreed()]).then(()=>{
@@ -1052,6 +1152,16 @@ setInterval(()=>{
   fetchCrypto();
   fetchCurrency();
 }, 60000);
+
+// Қойындыға қайта оралғанда деректерді дереу жаңарту
+// (браузер фондағы қойындыда таймерлерді бәсеңдетеді, сондықтан
+// пайдаланушы назар аударған сәтте баға ескіріп қалуы мүмкін)
+document.addEventListener('visibilitychange', () => {
+  if (document.visibilityState === 'visible') {
+    fetchCrypto();
+    fetchCurrency();
+  }
+});
 </script>
 </body>
 </html>
