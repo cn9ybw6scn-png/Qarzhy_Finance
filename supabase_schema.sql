@@ -122,6 +122,9 @@ alter table forum_answers enable row level security;
 alter table portfolios enable row level security;
 alter table bookmarks enable row level security;
 alter table investment_ideas enable row level security;
+alter table courses enable row level security;
+alter table lessons enable row level security;
+alter table calendar_events enable row level security;
 
 -- Кез келген адам оқи алады
 create policy "Public read posts" on forum_posts for select using (true);

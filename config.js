@@ -4,14 +4,22 @@
 
 const CONFIG = {
   // 1. Supabase — тегін: supabase.com → жаңа жоба → Settings → API
+  // ЕСКЕРТУ: тек "anon public" кілтін қой — ол клиент жақта ашық болуға арналған.
+  // Кестелерге RLS (Row Level Security) қосылмаса, деректер қорғалмайды!
   SUPABASE_URL: 'https://СІЗДІҢ_ID.supabase.co',
   SUPABASE_KEY: 'СІЗДІҢ_ANON_KEY',
 
   // 2. NewsAPI — тегін: newsapi.org → тіркел → API key
+  // ЕСКЕРТУ: NewsAPI тегін жоспары браузерден (production доменнен) тікелей
+  // сұрау салуға тыйым салады — тек localhost-та жұмыс істейді. Production-да
+  // қолдану үшін кілтті сервер жақтағы proxy (мыс. Supabase Edge Function)
+  // арқылы жасыру керек, оны осы файлға ешқашан қоймаңыз.
   NEWS_API_KEY: 'СІЗДІҢ_NEWS_API_KEY',
 
-  // 3. Claude API — тегін $5 кредит: console.anthropic.com
-  CLAUDE_API_KEY: 'СІЗДІҢ_CLAUDE_KEY',
+  // Claude API кілтін бұл файлға ЕШҚАШАН қоймаңыз — бұл файл браузерде толық
+  // ашық түрде жүктеледі, кез келген адам "View Source"-пен көре алады.
+  // AI мүмкіндігі керек болса, кілтті Supabase Edge Function/серверлік
+  // функцияда сақтап, сайт соған сұрау салсын.
 
   // Жаңалық санаттары
   NEWS_CATEGORIES: [
