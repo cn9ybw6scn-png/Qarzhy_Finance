@@ -1,0 +1,1057 @@
+<!DOCTYPE html>
+<html lang="kk">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Qarzhy.kz — Қазақша қаржы және инвестиция платформасы</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&family=JetBrains+Mono:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+:root{
+  --bg:#F7F9F8;
+  --bg2:#FFFFFF;
+  --bg3:#EEF4F0;
+  --surface:#E8F0EB;
+  --border:#DDE8E2;
+  --border2:#C8D8CE;
+  --green:#0A7A3E;
+  --green2:#12A055;
+  --green3:#16C064;
+  --green-light:#E6F7EE;
+  --green-dim:rgba(10,122,62,0.08);
+  --gold:#C89A00;
+  --gold-light:#FFF8E1;
+  --red:#C0392B;
+  --red-light:#FEF0EF;
+  --blue:#1A56DB;
+  --blue-light:#EBF2FF;
+  --text:#0F1F17;
+  --text2:#3D5C4A;
+  --text3:#7A9E8A;
+  --text4:#A8C4B4;
+  --mono:'JetBrains Mono',monospace;
+  --sans:'Inter',sans-serif;
+  --shadow:0 1px 3px rgba(0,0,0,0.06),0 1px 2px rgba(0,0,0,0.04);
+  --shadow2:0 4px 16px rgba(0,0,0,0.08);
+  --r:8px;--r2:12px;--r3:16px;
+}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth}
+body{background:var(--bg);color:var(--text);font-family:var(--sans);font-size:14px;line-height:1.5;overflow-x:hidden}
+
+/* NAV */
+nav{position:sticky;top:0;z-index:200;background:rgba(255,255,255,0.95);backdrop-filter:blur(12px);border-bottom:1px solid var(--border);padding:0 20px}
+.nav-inner{max-width:1320px;margin:0 auto;display:flex;align-items:center;gap:0;height:52px}
+.logo{font-family:var(--mono);font-size:18px;font-weight:700;color:var(--text);text-decoration:none;display:flex;align-items:center;gap:6px;margin-right:32px;flex-shrink:0}
+.logo-q{color:var(--green);font-size:22px}
+.logo-dot{width:6px;height:6px;border-radius:50%;background:var(--green3);animation:pulse 2s infinite;margin-left:2px}
+@keyframes pulse{0%,100%{opacity:1}50%{opacity:0.4}}
+.nav-links{display:flex;align-items:center;gap:2px;flex:1}
+.nav-link{padding:6px 12px;border-radius:6px;color:var(--text2);font-size:13px;font-weight:500;text-decoration:none;transition:all 0.15s;cursor:pointer;border:none;background:none;white-space:nowrap}
+.nav-link:hover{color:var(--text);background:var(--bg3)}
+.nav-link.active{color:var(--green);background:var(--green-light);font-weight:600}
+.nav-right{display:flex;align-items:center;gap:8px;margin-left:auto}
+.search-wrap{display:flex;align-items:center;gap:8px;background:var(--bg3);border:1px solid var(--border);border-radius:7px;padding:6px 12px;width:200px}
+.search-wrap input{background:none;border:none;outline:none;color:var(--text);font-size:13px;width:100%;font-family:var(--sans)}
+.search-wrap input::placeholder{color:var(--text3)}
+.search-icon{color:var(--text3);font-size:13px;flex-shrink:0}
+.btn-login{padding:7px 16px;border-radius:7px;background:transparent;color:var(--text2);font-size:13px;font-weight:500;border:1px solid var(--border2);cursor:pointer;transition:all 0.15s}
+.btn-login:hover{border-color:var(--green);color:var(--green)}
+.btn-signup{padding:7px 16px;border-radius:7px;background:var(--green);color:#fff;font-size:13px;font-weight:600;border:none;cursor:pointer;transition:all 0.15s}
+.btn-signup:hover{background:var(--green2)}
+
+/* TICKER */
+.ticker-bar{background:var(--text);color:#fff;overflow:hidden;padding:7px 0}
+.ticker-scroll{display:flex;gap:0;animation:tick 40s linear infinite;white-space:nowrap}
+.ticker-scroll:hover{animation-play-state:paused}
+@keyframes tick{0%{transform:translateX(0)}100%{transform:translateX(-50%)}}
+.tick-item{display:inline-flex;align-items:center;gap:6px;padding:0 20px;border-right:1px solid rgba(255,255,255,0.12);font-family:var(--mono);font-size:12px}
+.tick-name{color:rgba(255,255,255,0.5);font-size:11px}
+.tick-price{font-weight:600;color:#fff}
+.tick-up{color:#4ADE80}
+.tick-down{color:#F87171}
+
+/* HERO STRIP - не большой, деловой */
+.hero-strip{background:linear-gradient(135deg,var(--green) 0%,#0D5C30 100%);padding:36px 20px 32px;color:#fff}
+.hero-strip-inner{max-width:1320px;margin:0 auto;display:grid;grid-template-columns:1fr 380px;gap:48px;align-items:center}
+@media(max-width:900px){.hero-strip-inner{grid-template-columns:1fr}}
+.hero-eyebrow{display:inline-flex;align-items:center;gap:6px;background:rgba(255,255,255,0.15);border:1px solid rgba(255,255,255,0.25);border-radius:20px;padding:4px 14px;font-size:12px;font-weight:500;margin-bottom:16px}
+.hero-eyebrow-dot{width:5px;height:5px;border-radius:50%;background:#4ADE80;animation:pulse 1.5s infinite}
+.hero-h1{font-size:clamp(26px,4vw,40px);font-weight:800;line-height:1.2;letter-spacing:-0.5px;margin-bottom:12px}
+.hero-h1 em{font-style:normal;color:#4ADE80}
+.hero-sub{font-size:15px;color:rgba(255,255,255,0.75);line-height:1.6;margin-bottom:24px;max-width:480px}
+.hero-btns{display:flex;gap:10px;flex-wrap:wrap}
+.hero-btn-main{padding:11px 24px;border-radius:8px;background:#fff;color:var(--green);font-size:14px;font-weight:700;border:none;cursor:pointer;transition:all 0.2s}
+.hero-btn-main:hover{background:#E6F7EE;transform:translateY(-1px)}
+.hero-btn-sec{padding:11px 24px;border-radius:8px;background:rgba(255,255,255,0.12);color:#fff;font-size:14px;font-weight:500;border:1px solid rgba(255,255,255,0.3);cursor:pointer;transition:all 0.2s}
+.hero-btn-sec:hover{background:rgba(255,255,255,0.2)}
+.hero-stats{display:flex;gap:24px;margin-top:28px;padding-top:24px;border-top:1px solid rgba(255,255,255,0.2)}
+.h-stat-num{font-family:var(--mono);font-size:22px;font-weight:700}
+.h-stat-lbl{font-size:11px;color:rgba(255,255,255,0.6);margin-top:2px}
+
+/* Fear & Greed */
+.fear-greed{background:rgba(255,255,255,0.1);border:1px solid rgba(255,255,255,0.2);border-radius:var(--r2);padding:20px}
+.fg-title{font-size:12px;font-weight:600;color:rgba(255,255,255,0.6);text-transform:uppercase;letter-spacing:0.5px;margin-bottom:14px}
+.fg-meter{position:relative;height:10px;border-radius:10px;background:linear-gradient(90deg,#EF4444,#F97316,#EAB308,#22C55E,#16A34A);margin-bottom:14px;overflow:visible}
+.fg-needle{position:absolute;top:-4px;width:18px;height:18px;border-radius:50%;background:#fff;border:2px solid var(--text);transform:translateX(-50%);box-shadow:0 2px 6px rgba(0,0,0,0.3);transition:left 1s ease;left:72%}
+.fg-value{font-family:var(--mono);font-size:32px;font-weight:700;color:#4ADE80;margin-bottom:4px}
+.fg-label{font-size:13px;color:rgba(255,255,255,0.7)}
+.fg-bottom{display:flex;justify-content:space-between;font-size:10px;color:rgba(255,255,255,0.4);margin-top:6px}
+.conv-box{background:rgba(255,255,255,0.1);border:1px solid rgba(255,255,255,0.2);border-radius:var(--r2);padding:20px;margin-top:14px}
+.conv-title{font-size:12px;font-weight:600;color:rgba(255,255,255,0.6);text-transform:uppercase;letter-spacing:0.5px;margin-bottom:12px}
+.conv-row{display:flex;gap:8px;margin-bottom:8px;align-items:center}
+.conv-input{flex:1;background:rgba(255,255,255,0.12);border:1px solid rgba(255,255,255,0.2);border-radius:6px;padding:8px 12px;color:#fff;font-size:14px;font-family:var(--mono);outline:none}
+.conv-input::placeholder{color:rgba(255,255,255,0.4)}
+.conv-select{background:rgba(255,255,255,0.12);border:1px solid rgba(255,255,255,0.2);border-radius:6px;padding:8px 10px;color:#fff;font-size:13px;outline:none;cursor:pointer}
+.conv-select option{background:#0A7A3E;color:#fff}
+.conv-result{font-family:var(--mono);font-size:18px;font-weight:700;color:#4ADE80;padding:10px 12px;background:rgba(0,0,0,0.15);border-radius:6px;text-align:center}
+
+/* MAIN LAYOUT */
+.container{max-width:1320px;margin:0 auto;padding:0 20px}
+.main-grid{display:grid;grid-template-columns:1fr 320px;gap:24px;padding:24px 0}
+@media(max-width:1024px){.main-grid{grid-template-columns:1fr}}
+.sidebar{display:flex;flex-direction:column;gap:16px}
+
+/* SECTION */
+.section-title-row{display:flex;align-items:center;justify-content:space-between;margin-bottom:14px}
+.section-title{font-size:16px;font-weight:700;color:var(--text);display:flex;align-items:center;gap:8px}
+.section-title::before{content:'';width:3px;height:16px;background:var(--green);border-radius:2px;flex-shrink:0}
+.see-all{font-size:12px;color:var(--green);font-weight:600;cursor:pointer;border:none;background:none;text-decoration:none;display:flex;align-items:center;gap:3px}
+.see-all:hover{color:var(--green2)}
+
+/* MARKET TABLE */
+.market-table{background:var(--bg2);border:1px solid var(--border);border-radius:var(--r2);overflow:hidden;box-shadow:var(--shadow)}
+.market-table-header{display:grid;grid-template-columns:2fr 1.2fr 1fr 1fr 120px;padding:10px 16px;background:var(--bg3);border-bottom:1px solid var(--border);font-size:11px;font-weight:600;color:var(--text3);text-transform:uppercase;letter-spacing:0.5px}
+.market-row{display:grid;grid-template-columns:2fr 1.2fr 1fr 1fr 120px;padding:12px 16px;border-bottom:1px solid var(--border);align-items:center;cursor:pointer;transition:background 0.15s}
+.market-row:last-child{border-bottom:none}
+.market-row:hover{background:var(--bg3)}
+.market-name-cell{display:flex;align-items:center;gap:10px}
+.market-icon{width:32px;height:32px;border-radius:8px;display:flex;align-items:center;justify-content:center;font-size:16px;background:var(--bg3);flex-shrink:0}
+.market-name{font-size:13px;font-weight:600;color:var(--text)}
+.market-sym{font-size:11px;color:var(--text3);font-family:var(--mono)}
+.market-price-cell{font-family:var(--mono);font-size:13px;font-weight:600;color:var(--text)}
+.market-chg{font-family:var(--mono);font-size:13px;font-weight:600;display:inline-flex;align-items:center;gap:3px;padding:3px 8px;border-radius:5px}
+.market-chg.up{color:#15803D;background:#DCFCE7}
+.market-chg.down{color:#B91C1C;background:#FEE2E2}
+.spark-cell{height:36px}
+
+/* CAT TABS */
+.cat-tabs{display:flex;gap:4px;overflow-x:auto;scrollbar-width:none;padding-bottom:2px;margin-bottom:16px}
+.cat-tabs::-webkit-scrollbar{display:none}
+.cat-tab{padding:6px 14px;border-radius:6px;font-size:12px;font-weight:500;border:1px solid var(--border);background:var(--bg2);color:var(--text2);cursor:pointer;white-space:nowrap;transition:all 0.15s}
+.cat-tab:hover{border-color:var(--green);color:var(--green)}
+.cat-tab.active{background:var(--green);color:#fff;border-color:var(--green);font-weight:600}
+
+/* NEWS */
+.news-featured{display:grid;grid-template-columns:1.6fr 1fr;gap:12px;margin-bottom:12px}
+@media(max-width:700px){.news-featured{grid-template-columns:1fr}}
+.news-list{display:flex;flex-direction:column;gap:8px}
+.news-card-big{background:var(--bg2);border:1px solid var(--border);border-radius:var(--r2);overflow:hidden;cursor:pointer;transition:all 0.15s;box-shadow:var(--shadow)}
+.news-card-big:hover{box-shadow:var(--shadow2);border-color:var(--border2);transform:translateY(-1px)}
+.news-card-img{width:100%;height:180px;object-fit:cover;background:var(--green-light);display:flex;align-items:center;justify-content:center;font-size:52px}
+.news-card-body{padding:16px}
+.news-card-meta{display:flex;align-items:center;gap:8px;margin-bottom:8px;flex-wrap:wrap}
+.news-tag{font-size:10px;font-weight:700;padding:2px 8px;border-radius:4px;letter-spacing:0.3px;text-transform:uppercase}
+.news-tag-eco{background:#DCFCE7;color:#15803D}
+.news-tag-crypto{background:#FEF9C3;color:#A16207}
+.news-tag-stock{background:#EFF6FF;color:#1D4ED8}
+.news-tag-curr{background:#F5F3FF;color:#6D28D9}
+.news-tag-inv{background:#FFF7ED;color:#C2410C}
+.news-time{font-size:11px;color:var(--text3)}
+.news-title-big{font-size:16px;font-weight:700;color:var(--text);line-height:1.4;margin-bottom:8px}
+.news-desc{font-size:13px;color:var(--text2);line-height:1.55}
+.news-footer{display:flex;align-items:center;gap:6px;margin-top:10px;padding-top:10px;border-top:1px solid var(--border)}
+.news-source{font-size:11px;color:var(--text3)}
+.news-read{font-size:11px;color:var(--text3);margin-left:auto}
+.news-card-sm{background:var(--bg2);border:1px solid var(--border);border-radius:var(--r2);padding:14px;cursor:pointer;transition:all 0.15s;display:flex;gap:12px;align-items:flex-start;box-shadow:var(--shadow)}
+.news-card-sm:hover{box-shadow:var(--shadow2);border-color:var(--border2)}
+.news-card-sm-img{width:72px;height:72px;border-radius:7px;background:var(--green-light);display:flex;align-items:center;justify-content:center;font-size:28px;flex-shrink:0}
+.news-card-sm-body{flex:1;min-width:0}
+.news-title-sm{font-size:13px;font-weight:600;color:var(--text);line-height:1.4;margin-bottom:5px}
+.news-sm-meta{display:flex;align-items:center;gap:6px;flex-wrap:wrap}
+
+/* IDEAS */
+.idea-table{background:var(--bg2);border:1px solid var(--border);border-radius:var(--r2);overflow:hidden;box-shadow:var(--shadow)}
+.idea-row{display:grid;grid-template-columns:auto 1fr auto auto auto;gap:12px;padding:13px 16px;border-bottom:1px solid var(--border);align-items:center;cursor:pointer;transition:background 0.15s}
+.idea-row:first-child{background:var(--bg3);font-size:11px;font-weight:600;color:var(--text3);text-transform:uppercase;letter-spacing:0.5px;cursor:default}
+.idea-row:not(:first-child):hover{background:var(--bg3)}
+.idea-row:last-child{border-bottom:none}
+.idea-dir{padding:3px 10px;border-radius:4px;font-size:11px;font-weight:700;text-transform:uppercase;width:fit-content}
+.idea-dir.long{background:#DCFCE7;color:#15803D}
+.idea-dir.short{background:#FEE2E2;color:#B91C1C}
+.idea-asset{font-size:13px;font-weight:600;color:var(--text)}
+.idea-asset-sub{font-size:11px;color:var(--text3)}
+.idea-target{font-family:var(--mono);font-size:13px;font-weight:700}
+.idea-target.up{color:#15803D}
+.idea-target.down{color:#B91C1C}
+.idea-analyst{font-size:11px;color:var(--text3)}
+.risk-badge{font-size:10px;font-weight:600;padding:2px 7px;border-radius:4px}
+.risk-low{background:#DCFCE7;color:#15803D}
+.risk-med{background:#FEF9C3;color:#A16207}
+.risk-high{background:#FEE2E2;color:#B91C1C}
+
+/* CRYPTO TABLE */
+.crypto-table{background:var(--bg2);border:1px solid var(--border);border-radius:var(--r2);overflow:hidden;box-shadow:var(--shadow)}
+.crypto-header{display:grid;grid-template-columns:24px 1.5fr 1.2fr 1fr 1fr;gap:10px;padding:10px 14px;background:var(--bg3);border-bottom:1px solid var(--border);font-size:11px;font-weight:600;color:var(--text3);text-transform:uppercase;letter-spacing:0.5px}
+.crypto-row{display:grid;grid-template-columns:24px 1.5fr 1.2fr 1fr 1fr;gap:10px;padding:11px 14px;border-bottom:1px solid var(--border);align-items:center;cursor:pointer;transition:background 0.15s}
+.crypto-row:hover{background:var(--bg3)}
+.crypto-row:last-child{border-bottom:none}
+.crypto-rank{font-family:var(--mono);font-size:11px;color:var(--text3)}
+.crypto-info{display:flex;align-items:center;gap:8px}
+.crypto-icon{width:26px;height:26px;border-radius:50%;background:var(--bg3);display:flex;align-items:center;justify-content:center;font-size:14px}
+.crypto-name{font-size:13px;font-weight:600;color:var(--text)}
+.crypto-sym{font-size:11px;color:var(--text3);font-family:var(--mono)}
+.crypto-price{font-family:var(--mono);font-size:12px;font-weight:600;color:var(--text)}
+.crypto-chg{font-family:var(--mono);font-size:11px;font-weight:600}
+.crypto-chg.up{color:#15803D}
+.crypto-chg.down{color:#B91C1C}
+.crypto-cap{font-size:11px;color:var(--text3);font-family:var(--mono)}
+
+/* SIDEBAR WIDGETS */
+.widget{background:var(--bg2);border:1px solid var(--border);border-radius:var(--r2);overflow:hidden;box-shadow:var(--shadow)}
+.widget-header{padding:12px 16px;border-bottom:1px solid var(--border);font-size:13px;font-weight:700;color:var(--text);display:flex;align-items:center;justify-content:space-between}
+.widget-body{padding:14px 16px}
+.widget-row{display:flex;justify-content:space-between;align-items:center;padding:8px 0;border-bottom:1px solid var(--border)}
+.widget-row:last-child{border-bottom:none}
+.widget-lbl{font-size:12px;color:var(--text2);display:flex;align-items:center;gap:6px}
+.widget-val{font-family:var(--mono);font-size:12px;font-weight:600}
+.widget-val.up{color:#15803D}
+.widget-val.down{color:#B91C1C}
+
+/* Portfolio mini */
+.portfolio-total{text-align:center;padding:16px 0;border-bottom:1px solid var(--border);margin-bottom:10px}
+.portfolio-total-label{font-size:11px;color:var(--text3);margin-bottom:4px}
+.portfolio-total-num{font-family:var(--mono);font-size:26px;font-weight:700;color:var(--text)}
+.portfolio-total-chg{font-family:var(--mono);font-size:13px;font-weight:600;color:#15803D;margin-top:3px}
+.port-row{display:flex;align-items:center;gap:8px;padding:7px 0;border-bottom:1px solid var(--border)}
+.port-row:last-child{border-bottom:none}
+.port-color{width:8px;height:8px;border-radius:2px;flex-shrink:0}
+.port-name{font-size:12px;color:var(--text);font-weight:500;flex:1}
+.port-pct{font-size:11px;color:var(--text3);font-family:var(--mono)}
+.port-val{font-size:12px;font-weight:600;color:var(--text);font-family:var(--mono)}
+.port-bar-wrap{width:100%;height:4px;background:var(--border);border-radius:2px;margin-top:10px;overflow:hidden;display:flex}
+.port-bar-seg{height:100%;transition:width 0.5s ease}
+
+/* Calendar widget */
+.calendar-item{display:flex;align-items:flex-start;gap:10px;padding:8px 0;border-bottom:1px solid var(--border)}
+.calendar-item:last-child{border-bottom:none}
+.cal-date{font-family:var(--mono);font-size:10px;color:var(--text3);white-space:nowrap;min-width:44px}
+.cal-title{font-size:12px;font-weight:500;color:var(--text)}
+.cal-impact{width:6px;height:6px;border-radius:50%;flex-shrink:0;margin-top:4px}
+
+/* MODAL */
+.modal-overlay{position:fixed;inset:0;background:rgba(0,0,0,0.5);backdrop-filter:blur(4px);z-index:500;display:none;align-items:center;justify-content:center;padding:20px}
+.modal-overlay.open{display:flex}
+.modal{background:#fff;border-radius:16px;padding:32px;max-width:420px;width:100%;position:relative;box-shadow:0 20px 60px rgba(0,0,0,0.15)}
+.modal-close{position:absolute;top:14px;right:14px;background:var(--bg3);border:none;color:var(--text2);width:30px;height:30px;border-radius:7px;cursor:pointer;font-size:16px;display:flex;align-items:center;justify-content:center}
+.modal-title{font-size:20px;font-weight:700;margin-bottom:6px;color:var(--text)}
+.modal-sub{font-size:13px;color:var(--text2);margin-bottom:22px}
+.form-group{margin-bottom:14px}
+.form-label{font-size:12px;color:var(--text2);margin-bottom:5px;display:block;font-weight:500}
+.form-input{width:100%;background:var(--bg3);border:1px solid var(--border);border-radius:7px;padding:10px 13px;color:var(--text);font-size:14px;font-family:var(--sans);outline:none;transition:border-color 0.15s}
+.form-input:focus{border-color:var(--green);background:#fff}
+.form-input::placeholder{color:var(--text3)}
+.form-btn{width:100%;background:var(--green);color:#fff;border:none;border-radius:8px;padding:12px;font-size:14px;font-weight:700;cursor:pointer;margin-top:8px;transition:background 0.15s}
+.form-btn:hover{background:var(--green2)}
+.form-link{text-align:center;margin-top:12px;font-size:12px;color:var(--text3)}
+.form-link a{color:var(--green);cursor:pointer;font-weight:600}
+
+.toast{position:fixed;bottom:20px;right:20px;background:var(--text);color:#fff;border-radius:10px;padding:12px 20px;font-size:13px;font-weight:500;z-index:600;transform:translateY(60px);opacity:0;transition:all 0.3s;display:flex;align-items:center;gap:8px;box-shadow:var(--shadow2)}
+.toast.show{transform:translateY(0);opacity:1}
+.toast-icon{color:var(--green3);font-size:16px}
+
+@media(max-width:768px){
+  .hero-strip-inner{grid-template-columns:1fr}
+  .market-table-header,.market-row{grid-template-columns:2fr 1fr 1fr}
+  .market-row .spark-cell,.market-table-header:nth-child(4){display:none}
+  .news-featured{grid-template-columns:1fr}
+  .main-grid{grid-template-columns:1fr}
+  .sidebar{display:none}
+}
+</style>
+</head>
+<body>
+
+<!-- NAV -->
+<nav>
+<div class="nav-inner">
+  <a class="logo" href="#">
+    <span class="logo-q">₸</span>Qarzhy<span class="logo-dot"></span>
+  </a>
+  <div class="nav-links">
+    <button class="nav-link active" onclick="goto('market')">Нарық</button>
+    <button class="nav-link" onclick="goto('news')">Жаңалықтар</button>
+    <button class="nav-link" onclick="goto('ideas')">Идеялар</button>
+    <button class="nav-link" onclick="goto('crypto')">Крипто</button>
+    <button class="nav-link" onclick="goto('courses')">Оқыту</button>
+    <button class="nav-link" onclick="goto('forum')">Форум</button>
+  </div>
+  <div class="nav-right">
+    <div class="search-wrap">
+      <span class="search-icon">⌕</span>
+      <input type="text" placeholder="KASE, BTC, USD...">
+    </div>
+    <button class="btn-login" onclick="openModal('login')">Кіру</button>
+    <button class="btn-signup" onclick="openModal('register')">Тіркелу</button>
+  </div>
+</div>
+</nav>
+
+<!-- TICKER -->
+<div class="ticker-bar">
+  <div class="ticker-scroll" id="tickerScroll"></div>
+</div>
+
+<!-- HERO -->
+<div class="hero-strip">
+  <div class="hero-strip-inner">
+    <div>
+      <div class="hero-eyebrow"><span class="hero-eyebrow-dot"></span> Қазақстандағы алғашқы қаржы платформасы</div>
+      <h1 class="hero-h1">Ақшаңды <em>ақылды</em> басқар —<br>қазақша, бүгіннен бастап</h1>
+      <p class="hero-sub">KASE нарығы, криптовалюта, валюта бағамдары, инвестициялық идеялар — барлығы қазақ тілінде. Yahoo Finance мен Investing.com-ның қазақша баламасы.</p>
+      <div class="hero-btns">
+        <button class="hero-btn-main" onclick="openModal('register')">Тегін тіркелу →</button>
+        <button class="hero-btn-sec" onclick="goto('market')">Нарықты қарау</button>
+      </div>
+      <div class="hero-stats">
+        <div><div class="h-stat-num">12K+</div><div class="h-stat-lbl">Пайдаланушы</div></div>
+        <div><div class="h-stat-num">500+</div><div class="h-stat-lbl">Жаңалық/ай</div></div>
+        <div><div class="h-stat-num">80+</div><div class="h-stat-lbl">Инвест идея</div></div>
+        <div><div class="h-stat-num">24/7</div><div class="h-stat-lbl">Нарық деректері</div></div>
+      </div>
+    </div>
+    <div>
+      <div class="fear-greed">
+        <div class="fg-title">Fear & Greed индексі</div>
+        <div class="fg-meter"><div class="fg-needle" id="fgNeedle"></div></div>
+        <div class="fg-bottom"><span>Қорқыныш</span><span>Ашкөздік</span></div>
+        <div style="margin-top:12px;display:flex;align-items:flex-end;gap:12px">
+          <div><div class="fg-value" id="fgVal">72</div><div class="fg-label">Ашкөздік 😏</div></div>
+          <div style="font-size:11px;color:rgba(255,255,255,0.5);line-height:1.5">Кеше: 68<br>Апта бұрын: 61</div>
+        </div>
+      </div>
+      <div class="conv-box">
+        <div class="conv-title">Валюта конверторы</div>
+        <div class="conv-row">
+          <input class="conv-input" id="convAmt" type="number" value="100" oninput="calcConv()">
+          <select class="conv-select" id="convFrom" onchange="calcConv()">
+            <option value="1">USD</option>
+            <option value="0.00201">KZT</option>
+            <option value="1.08">EUR</option>
+            <option value="0.0000142">KZT/BTC</option>
+          </select>
+          <span style="color:rgba(255,255,255,0.4);font-size:16px">→</span>
+          <select class="conv-select" id="convTo" onchange="calcConv()">
+            <option value="498.2">KZT</option>
+            <option value="1">USD</option>
+            <option value="541.8">EUR/KZT</option>
+          </select>
+        </div>
+        <div class="conv-result" id="convResult">49 820 ₸</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="container">
+<div class="main-grid">
+<div>
+
+<!-- MARKET TABLE -->
+<div id="market" style="padding-top:24px">
+  <div class="section-title-row">
+    <div class="section-title">Нарық шолуы</div>
+    <button class="see-all">Барлығы →</button>
+  </div>
+  <div class="cat-tabs">
+    <button class="cat-tab active" onclick="filterMkt(this,'all')">Барлығы</button>
+    <button class="cat-tab" onclick="filterMkt(this,'kz')">Қазақстан</button>
+    <button class="cat-tab" onclick="filterMkt(this,'world')">Әлем</button>
+    <button class="cat-tab" onclick="filterMkt(this,'currency')">Валюта</button>
+    <button class="cat-tab" onclick="filterMkt(this,'commodity')">Тауар</button>
+  </div>
+  <div class="market-table">
+    <div class="market-table-header">
+      <span>Аталым</span><span>Баға</span><span>24с өзгеріс</span><span>Апталық</span><span>График</span>
+    </div>
+    <div id="marketRows"></div>
+  </div>
+</div>
+
+<!-- NEWS -->
+<div id="news" style="padding-top:32px">
+  <div class="section-title-row">
+    <div class="section-title">Соңғы жаңалықтар</div>
+    <button class="see-all">Барлық жаңалықтар →</button>
+  </div>
+  <div class="cat-tabs">
+    <button class="cat-tab active" onclick="filterNews(this,'all')">Барлығы</button>
+    <button class="cat-tab" onclick="filterNews(this,'economy')">Экономика</button>
+    <button class="cat-tab" onclick="filterNews(this,'stocks')">Акциялар</button>
+    <button class="cat-tab" onclick="filterNews(this,'crypto')">Крипто</button>
+    <button class="cat-tab" onclick="filterNews(this,'currency')">Валюта</button>
+    <button class="cat-tab" onclick="filterNews(this,'invest')">Инвестиция</button>
+  </div>
+  <div class="news-featured" id="newsFeatured">
+    <div class="news-card-big" data-cat="economy">
+      <div class="news-card-img">🏦</div>
+      <div class="news-card-body">
+        <div class="news-card-meta">
+          <span class="news-tag news-tag-eco">Экономика</span>
+          <span class="news-time">1 сағат бұрын</span>
+        </div>
+        <div class="news-title-big">Ұлттық Банк базалық мөлшерлемені 15,25%-да ұстап қалды — инфляцияны тежеу жалғасады</div>
+        <div class="news-desc">Ақша-несие саясатын белгілейтін кезекті отырыста Ұлттық Банк Басқармасы мөлшерлемені өзгерусіз қалдыруды шешті. Сарапшылар жылдың аяғына қарай 0,5 б.п. төмендету мүмкіндігін жоққа шығармайды.</div>
+        <div class="news-footer">
+          <span class="news-source">nationalbank.kz</span>
+          <span style="color:var(--border2)">·</span>
+          <span class="news-read">4 мин оқу</span>
+        </div>
+      </div>
+    </div>
+    <div class="news-card-big" data-cat="crypto">
+      <div class="news-card-img">₿</div>
+      <div class="news-card-body">
+        <div class="news-card-meta">
+          <span class="news-tag news-tag-crypto">Крипто</span>
+          <span class="news-time">2 сағат бұрын</span>
+        </div>
+        <div class="news-title-big">Bitcoin $71,000 асты — институционалдық ETF ағынының рекорды</div>
+        <div class="news-desc">АҚШ-тың Bitcoin спот ETF-тері бір апта ішінде $2.4 млрд тартты. BlackRock мен Fidelity ең үлкен үлеске ие болды.</div>
+        <div class="news-footer">
+          <span class="news-source">CoinDesk</span>
+          <span style="color:var(--border2)">·</span>
+          <span class="news-read">3 мин оқу</span>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="news-list" id="newsList">
+    <div class="news-card-sm" data-cat="stocks">
+      <div class="news-card-sm-img">📈</div>
+      <div class="news-card-sm-body">
+        <div class="news-sm-meta">
+          <span class="news-tag news-tag-stock">Акциялар</span>
+          <span class="news-time">3 сағ.</span>
+        </div>
+        <div class="news-title-sm">KASE индексі жыл басынан 18% өсіп, 4812 нүктеге жетті — банк секторы лидер</div>
+        <div class="news-footer" style="border-top:none;padding-top:4px;margin-top:4px">
+          <span class="news-source">kase.kz</span>
+          <span class="news-read">2 мин</span>
+        </div>
+      </div>
+    </div>
+    <div class="news-card-sm" data-cat="invest">
+      <div class="news-card-sm-img">💼</div>
+      <div class="news-card-sm-body">
+        <div class="news-sm-meta">
+          <span class="news-tag news-tag-inv">Инвестиция</span>
+          <span class="news-time">5 сағ.</span>
+        </div>
+        <div class="news-title-sm">Қазақстандықтардың ETF-ке инвестициясы бір жылда екі есеге өсті — Centras деректері</div>
+        <div class="news-footer" style="border-top:none;padding-top:4px;margin-top:4px">
+          <span class="news-source">Qarzhy</span>
+          <span class="news-read">3 мин</span>
+        </div>
+      </div>
+    </div>
+    <div class="news-card-sm" data-cat="currency">
+      <div class="news-card-sm-img">💵</div>
+      <div class="news-card-sm-body">
+        <div class="news-sm-meta">
+          <span class="news-tag news-tag-curr">Валюта</span>
+          <span class="news-time">6 сағ.</span>
+        </div>
+        <div class="news-title-sm">Теңге мұнай бағасының көтерілуіне орай доллар бағамына қатысты 498,2 деңгейінде тұрақтады</div>
+        <div class="news-footer" style="border-top:none;padding-top:4px;margin-top:4px">
+          <span class="news-source">nationalbank.kz</span>
+          <span class="news-read">2 мин</span>
+        </div>
+      </div>
+    </div>
+    <div class="news-card-sm" data-cat="stocks">
+      <div class="news-card-sm-img">🛢️</div>
+      <div class="news-card-sm-body">
+        <div class="news-sm-meta">
+          <span class="news-tag news-tag-stock">Акциялар</span>
+          <span class="news-time">8 сағ.</span>
+        </div>
+        <div class="news-title-sm">KazMunayGas дивиденд мөлшерін арттырды: акция бағасы 4,2%-ға өсті</div>
+        <div class="news-footer" style="border-top:none;padding-top:4px;margin-top:4px">
+          <span class="news-source">kase.kz</span>
+          <span class="news-read">3 мин</span>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- INVESTMENT IDEAS -->
+<div id="ideas" style="padding-top:32px">
+  <div class="section-title-row">
+    <div class="section-title">Инвестициялық идеялар</div>
+    <button class="see-all">Барлық идеялар →</button>
+  </div>
+  <div class="idea-table">
+    <div class="idea-row">
+      <span>Бағыт</span><span>Актив</span><span>Мақсат</span><span>Талдаушы</span><span>Тәуекел</span>
+    </div>
+    <div class="idea-row" onclick="openModal('register')">
+      <div class="idea-dir long">LONG</div>
+      <div><div class="idea-asset">KMG (KazMunayGas)</div><div class="idea-asset-sub">KASE · Мұнай-газ</div></div>
+      <div class="idea-target up">+18% / 4 200 ₸</div>
+      <div class="idea-analyst">А. Сейтқали</div>
+      <div class="risk-badge risk-med">Орташа</div>
+    </div>
+    <div class="idea-row" onclick="openModal('register')">
+      <div class="idea-dir long">LONG</div>
+      <div><div class="idea-asset">Bitcoin (BTC)</div><div class="idea-asset-sub">Crypto · Цифрлық</div></div>
+      <div class="idea-target up">+15% / $82K</div>
+      <div class="idea-analyst">Н. Бекұлы</div>
+      <div class="risk-badge risk-high">Жоғары</div>
+    </div>
+    <div class="idea-row" onclick="openModal('register')">
+      <div class="idea-dir long">LONG</div>
+      <div><div class="idea-asset">Halyk Bank (HSBK)</div><div class="idea-asset-sub">KASE · Банк</div></div>
+      <div class="idea-target up">+10% + дивиденд</div>
+      <div class="idea-analyst">А. Сейтқали</div>
+      <div class="risk-badge risk-low">Төмен</div>
+    </div>
+    <div class="idea-row" onclick="openModal('register')">
+      <div class="idea-dir short">SHORT</div>
+      <div><div class="idea-asset">Tesla (TSLA)</div><div class="idea-asset-sub">NASDAQ · Авто</div></div>
+      <div class="idea-target down">-10% / $155</div>
+      <div class="idea-analyst">Д. Мұратова</div>
+      <div class="risk-badge risk-high">Жоғары</div>
+    </div>
+    <div class="idea-row" onclick="openModal('register')">
+      <div class="idea-dir long">LONG</div>
+      <div><div class="idea-asset">Алтын (XAU/USD)</div><div class="idea-asset-sub">Тауар · Металл</div></div>
+      <div class="idea-target up">+8% / $2 540</div>
+      <div class="idea-analyst">Е. Тоқаева</div>
+      <div class="risk-badge risk-low">Төмен</div>
+    </div>
+  </div>
+</div>
+
+<!-- CRYPTO TOP -->
+<div id="crypto" style="padding-top:32px">
+  <div class="section-title-row">
+    <div class="section-title">Криптовалюта — Топ 8</div>
+    <button class="see-all">Crypto нарығы →</button>
+  </div>
+  <div class="crypto-table">
+    <div class="crypto-header">
+      <span>#</span><span>Атауы</span><span>Баға</span><span>24с</span><span>Нарық капиталы</span>
+    </div>
+    <div id="cryptoRows"></div>
+  </div>
+</div>
+
+<!-- COURSES -->
+<div id="courses" style="padding-top:32px;padding-bottom:32px">
+  <div class="section-title-row">
+    <div class="section-title">Қаржылық сауаттылық</div>
+    <button class="see-all">Барлық курстар →</button>
+  </div>
+  <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:12px">
+    <div style="background:var(--bg2);border:1px solid var(--border);border-radius:var(--r2);overflow:hidden;cursor:pointer;transition:all 0.15s;box-shadow:var(--shadow)" onmouseover="this.style.transform='translateY(-2px)'" onmouseout="this.style.transform=''" onclick="openModal('register')">
+      <div style="height:90px;background:linear-gradient(135deg,var(--green) 0%,#0D5C30 100%);display:flex;align-items:center;justify-content:center;font-size:40px">📊</div>
+      <div style="padding:14px">
+        <div style="font-size:10px;font-weight:700;color:var(--green);text-transform:uppercase;letter-spacing:0.5px;margin-bottom:6px">Бастауыш</div>
+        <div style="font-size:13px;font-weight:700;color:var(--text);margin-bottom:6px;line-height:1.4">Инвестицияның негіздері — нөлден бастап</div>
+        <div style="display:flex;align-items:center;gap:6px;font-size:11px;color:var(--text3)"><span style="color:var(--gold)">★★★★★</span> 4.9 · 32 сабақ</div>
+      </div>
+    </div>
+    <div style="background:var(--bg2);border:1px solid var(--border);border-radius:var(--r2);overflow:hidden;cursor:pointer;transition:all 0.15s;box-shadow:var(--shadow)" onmouseover="this.style.transform='translateY(-2px)'" onmouseout="this.style.transform=''" onclick="openModal('register')">
+      <div style="height:90px;background:linear-gradient(135deg,#92400E 0%,#B45309 100%);display:flex;align-items:center;justify-content:center;font-size:40px">₿</div>
+      <div style="padding:14px">
+        <div style="font-size:10px;font-weight:700;color:var(--gold);text-transform:uppercase;letter-spacing:0.5px;margin-bottom:6px">Орташа</div>
+        <div style="font-size:13px;font-weight:700;color:var(--text);margin-bottom:6px;line-height:1.4">Криптовалютаға инвестиция — тәуекел мен мүмкіндік</div>
+        <div style="display:flex;align-items:center;gap:6px;font-size:11px;color:var(--text3)"><span style="color:var(--gold)">★★★★☆</span> 4.7 · 24 сабақ</div>
+      </div>
+    </div>
+    <div style="background:var(--bg2);border:1px solid var(--border);border-radius:var(--r2);overflow:hidden;cursor:pointer;transition:all 0.15s;box-shadow:var(--shadow)" onmouseover="this.style.transform='translateY(-2px)'" onmouseout="this.style.transform=''" onclick="openModal('register')">
+      <div style="height:90px;background:linear-gradient(135deg,#1E40AF 0%,#1D4ED8 100%);display:flex;align-items:center;justify-content:center;font-size:40px">📈</div>
+      <div style="padding:14px">
+        <div style="font-size:10px;font-weight:700;color:var(--blue);text-transform:uppercase;letter-spacing:0.5px;margin-bottom:6px">Жоғары</div>
+        <div style="font-size:13px;font-weight:700;color:var(--text);margin-bottom:6px;line-height:1.4">Техникалық талдау — графиктерді оқу өнері</div>
+        <div style="display:flex;align-items:center;gap:6px;font-size:11px;color:var(--text3)"><span style="color:var(--gold)">★★★★★</span> 4.8 · 40 сабақ</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+</div><!-- /main col -->
+
+<!-- SIDEBAR -->
+<div class="sidebar">
+
+  <!-- Portfolio widget -->
+  <div class="widget" style="margin-top:24px">
+    <div class="widget-header">
+      Менің портфолиом
+      <button class="see-all" onclick="openModal('register')">Кіру</button>
+    </div>
+    <div class="widget-body">
+      <div class="portfolio-total">
+        <div class="portfolio-total-label">Жалпы құны</div>
+        <div class="portfolio-total-num">4 820 000 ₸</div>
+        <div class="portfolio-total-chg">▲ +3.24% бүгін</div>
+      </div>
+      <div class="port-row"><div class="port-color" style="background:#0A7A3E"></div><div class="port-name">Акциялар</div><div class="port-pct">45%</div><div class="port-val">2 169 000 ₸</div></div>
+      <div class="port-row"><div class="port-color" style="background:#C89A00"></div><div class="port-name">Крипто</div><div class="port-pct">30%</div><div class="port-val">1 446 000 ₸</div></div>
+      <div class="port-row"><div class="port-color" style="background:#1A56DB"></div><div class="port-name">Облигация</div><div class="port-pct">15%</div><div class="port-val">723 000 ₸</div></div>
+      <div class="port-row"><div class="port-color" style="background:#7A9E8A"></div><div class="port-name">Кэш</div><div class="port-pct">10%</div><div class="port-val">482 000 ₸</div></div>
+      <div class="port-bar-wrap" style="margin-top:12px">
+        <div class="port-bar-seg" style="width:45%;background:#0A7A3E;border-radius:2px 0 0 2px"></div>
+        <div class="port-bar-seg" style="width:30%;background:#C89A00"></div>
+        <div class="port-bar-seg" style="width:15%;background:#1A56DB"></div>
+        <div class="port-bar-seg" style="width:10%;background:#7A9E8A;border-radius:0 2px 2px 0"></div>
+      </div>
+      <button class="form-btn" style="margin-top:14px;font-size:12px;padding:9px" onclick="openModal('register')">Портфолио жасау</button>
+    </div>
+  </div>
+
+  <!-- Currency rates -->
+  <div class="widget">
+    <div class="widget-header">Валюта бағамдары <span style="font-size:11px;color:var(--text3)">ҰБ</span></div>
+    <div class="widget-body">
+      <div class="widget-row"><span class="widget-lbl">🇺🇸 USD</span><span class="widget-val up">498.20 ₸</span></div>
+      <div class="widget-row"><span class="widget-lbl">🇪🇺 EUR</span><span class="widget-val up">541.80 ₸</span></div>
+      <div class="widget-row"><span class="widget-lbl">🇷🇺 RUB</span><span class="widget-val down">5.42 ₸</span></div>
+      <div class="widget-row"><span class="widget-lbl">🇨🇳 CNY</span><span class="widget-val up">68.60 ₸</span></div>
+      <div class="widget-row"><span class="widget-lbl">🇬🇧 GBP</span><span class="widget-val up">630.40 ₸</span></div>
+    </div>
+  </div>
+
+  <!-- Economic calendar -->
+  <div class="widget">
+    <div class="widget-header">Экономикалық күнтізбе</div>
+    <div class="widget-body">
+      <div class="calendar-item">
+        <div class="cal-date">Бүгін<br>14:00</div>
+        <div class="cal-impact" style="background:#EF4444"></div>
+        <div class="cal-title">АҚШ инфляция деректері (CPI)</div>
+      </div>
+      <div class="calendar-item">
+        <div class="cal-date">Ерт.<br>10:00</div>
+        <div class="cal-impact" style="background:#F97316"></div>
+        <div class="cal-title">ҚР ЖІӨ өсу қарқыны, I тоқсан</div>
+      </div>
+      <div class="calendar-item">
+        <div class="cal-date">Жұма<br>12:00</div>
+        <div class="cal-impact" style="background:#EAB308"></div>
+        <div class="cal-title">Fed мөлшерлеме шешімі</div>
+      </div>
+      <div class="calendar-item">
+        <div class="cal-date">Дүй.<br>09:00</div>
+        <div class="cal-impact" style="background:#22C55E"></div>
+        <div class="cal-title">KMG тоқсандық есебі</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Trending -->
+  <div class="widget">
+    <div class="widget-header">Танымал іздеулер</div>
+    <div class="widget-body">
+      <div class="widget-row"><span class="widget-lbl"><span style="color:var(--text3);font-family:var(--mono);font-size:11px">1</span> 🔥 BTC/USD</span><span style="font-size:11px;color:#15803D;font-weight:600">+2.85%</span></div>
+      <div class="widget-row"><span class="widget-lbl"><span style="color:var(--text3);font-family:var(--mono);font-size:11px">2</span> 📈 KMG</span><span style="font-size:11px;color:#15803D;font-weight:600">+1.42%</span></div>
+      <div class="widget-row"><span class="widget-lbl"><span style="color:var(--text3);font-family:var(--mono);font-size:11px">3</span> 💵 USD/KZT</span><span style="font-size:11px;color:#15803D;font-weight:600">+0.15%</span></div>
+      <div class="widget-row"><span class="widget-lbl"><span style="color:var(--text3);font-family:var(--mono);font-size:11px">4</span> Ξ ETH</span><span style="font-size:11px;color:#B91C1C;font-weight:600">-0.62%</span></div>
+      <div class="widget-row"><span class="widget-lbl"><span style="color:var(--text3);font-family:var(--mono);font-size:11px">5</span> 🥇 Алтын</span><span style="font-size:11px;color:#15803D;font-weight:600">+0.71%</span></div>
+    </div>
+  </div>
+
+</div><!-- /sidebar -->
+</div><!-- /main-grid -->
+
+<!-- FORUM PREVIEW -->
+<div id="forum" style="padding:32px 0">
+  <div class="section-title-row">
+    <div class="section-title">Инвестор форумы</div>
+    <button class="see-all">Форумға өту →</button>
+  </div>
+  <div style="display:flex;flex-direction:column;gap:8px">
+    <div style="background:var(--bg2);border:1px solid var(--border);border-radius:var(--r);padding:14px 18px;display:flex;align-items:center;gap:14px;cursor:pointer;transition:all 0.15s;box-shadow:var(--shadow)" onclick="openModal('register')" onmouseover="this.style.borderColor='var(--green)'" onmouseout="this.style.borderColor='var(--border)'">
+      <div style="width:36px;height:36px;border-radius:8px;background:var(--green-light);display:flex;align-items:center;justify-content:center;font-size:16px;flex-shrink:0">💬</div>
+      <div style="flex:1;min-width:0">
+        <div style="font-size:13px;font-weight:600;color:var(--text);margin-bottom:4px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">KASE-ге немесе ETF-ке инвестиция салу — 2025 жылы қайсысы тиімдірек?</div>
+        <div style="display:flex;gap:8px;font-size:11px;color:var(--text3)"><span class="news-tag news-tag-stock">Акциялар</span><span>Азамат С.</span><span>·</span><span>3 сағ. бұрын</span></div>
+      </div>
+      <div style="display:flex;gap:16px;flex-shrink:0;text-align:center">
+        <div><div style="font-family:var(--mono);font-size:14px;font-weight:600;color:#15803D">14</div><div style="font-size:10px;color:var(--text3)">жауап</div></div>
+        <div><div style="font-family:var(--mono);font-size:14px;font-weight:600;color:var(--text2)">342</div><div style="font-size:10px;color:var(--text3)">қараған</div></div>
+      </div>
+    </div>
+    <div style="background:var(--bg2);border:1px solid var(--border);border-radius:var(--r);padding:14px 18px;display:flex;align-items:center;gap:14px;cursor:pointer;transition:all 0.15s;box-shadow:var(--shadow)" onclick="openModal('register')" onmouseover="this.style.borderColor='var(--green)'" onmouseout="this.style.borderColor='var(--border)'">
+      <div style="width:36px;height:36px;border-radius:8px;background:var(--gold-light);display:flex;align-items:center;justify-content:center;font-size:16px;flex-shrink:0">₿</div>
+      <div style="flex:1;min-width:0">
+        <div style="font-size:13px;font-weight:600;color:var(--text);margin-bottom:4px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">Ethereum 2025 жылы $10,000-ға жете ме? Сарапшы болжамдары мен техникалық талдау</div>
+        <div style="display:flex;gap:8px;font-size:11px;color:var(--text3)"><span class="news-tag news-tag-crypto">Крипто</span><span>Нұрлан Б.</span><span>·</span><span>5 сағ. бұрын</span></div>
+      </div>
+      <div style="display:flex;gap:16px;flex-shrink:0;text-align:center">
+        <div><div style="font-family:var(--mono);font-size:14px;font-weight:600;color:#15803D">9</div><div style="font-size:10px;color:var(--text3)">жауап</div></div>
+        <div><div style="font-family:var(--mono);font-size:14px;font-weight:600;color:var(--text2)">187</div><div style="font-size:10px;color:var(--text3)">қараған</div></div>
+      </div>
+    </div>
+  </div>
+  <div style="text-align:center;margin-top:16px">
+    <button style="padding:10px 24px;border-radius:8px;background:transparent;color:var(--green);font-size:13px;font-weight:600;border:1.5px solid var(--green);cursor:pointer" onclick="openModal('register')">💬 Сұрақ қою үшін тіркелу</button>
+  </div>
+</div>
+
+</div><!-- /container -->
+
+<!-- FOOTER -->
+<footer style="background:var(--text);color:rgba(255,255,255,0.8);padding:40px 20px 20px">
+  <div style="max-width:1320px;margin:0 auto">
+    <div style="display:grid;grid-template-columns:2fr 1fr 1fr 1fr;gap:40px;margin-bottom:32px">
+      <div>
+        <div style="font-family:var(--mono);font-size:20px;font-weight:700;color:#fff;margin-bottom:10px"><span style="color:var(--green3)">₸</span>Qarzhy.kz</div>
+        <div style="font-size:13px;color:rgba(255,255,255,0.5);line-height:1.7;max-width:260px">Қазақстандық инвесторлар мен қаржы мамандарының алғашқы қазақша платформасы.</div>
+      </div>
+      <div>
+        <div style="font-size:11px;font-weight:600;color:rgba(255,255,255,0.4);text-transform:uppercase;letter-spacing:0.5px;margin-bottom:12px">Платформа</div>
+        <div style="display:flex;flex-direction:column;gap:8px">
+          <a style="font-size:13px;color:rgba(255,255,255,0.6);text-decoration:none;cursor:pointer" onmouseover="this.style.color='#4ADE80'" onmouseout="this.style.color='rgba(255,255,255,0.6)'">Нарық деректері</a>
+          <a style="font-size:13px;color:rgba(255,255,255,0.6);text-decoration:none;cursor:pointer" onmouseover="this.style.color='#4ADE80'" onmouseout="this.style.color='rgba(255,255,255,0.6)'">Жаңалықтар</a>
+          <a style="font-size:13px;color:rgba(255,255,255,0.6);text-decoration:none;cursor:pointer" onmouseover="this.style.color='#4ADE80'" onmouseout="this.style.color='rgba(255,255,255,0.6)'">Инвест идеялар</a>
+          <a style="font-size:13px;color:rgba(255,255,255,0.6);text-decoration:none;cursor:pointer" onmouseover="this.style.color='#4ADE80'" onmouseout="this.style.color='rgba(255,255,255,0.6)'">Курстар</a>
+          <a style="font-size:13px;color:rgba(255,255,255,0.6);text-decoration:none;cursor:pointer" onmouseover="this.style.color='#4ADE80'" onmouseout="this.style.color='rgba(255,255,255,0.6)'">Форум</a>
+        </div>
+      </div>
+      <div>
+        <div style="font-size:11px;font-weight:600;color:rgba(255,255,255,0.4);text-transform:uppercase;letter-spacing:0.5px;margin-bottom:12px">Нарықтар</div>
+        <div style="display:flex;flex-direction:column;gap:8px">
+          <a style="font-size:13px;color:rgba(255,255,255,0.6);cursor:pointer">KASE</a>
+          <a style="font-size:13px;color:rgba(255,255,255,0.6);cursor:pointer">Криптовалюта</a>
+          <a style="font-size:13px;color:rgba(255,255,255,0.6);cursor:pointer">Форекс</a>
+          <a style="font-size:13px;color:rgba(255,255,255,0.6);cursor:pointer">Тауар нарығы</a>
+        </div>
+      </div>
+      <div>
+        <div style="font-size:11px;font-weight:600;color:rgba(255,255,255,0.4);text-transform:uppercase;letter-spacing:0.5px;margin-bottom:12px">Байланыс</div>
+        <div style="display:flex;flex-direction:column;gap:8px">
+          <a style="font-size:13px;color:rgba(255,255,255,0.6);cursor:pointer">Telegram каналы</a>
+          <a style="font-size:13px;color:rgba(255,255,255,0.6);cursor:pointer">Жарнама</a>
+          <a style="font-size:13px;color:rgba(255,255,255,0.6);cursor:pointer">Байланыс</a>
+        </div>
+      </div>
+    </div>
+    <div style="border-top:1px solid rgba(255,255,255,0.1);padding-top:16px;font-size:11px;color:rgba(255,255,255,0.3);line-height:1.6">
+      ⚠️ Ескерту: Платформадағы барлық ақпарат тек танымдық мақсатта және қаржылық кеңес болып табылмайды. Инвестициялық шешім қабылдамас бұрын өз зерттеуіңізді жүргізіп, қажет болса білікті қаржы кеңесшісімен кеңесіңіз. &nbsp;|&nbsp; © 2025 Qarzhy.kz
+    </div>
+  </div>
+</footer>
+
+<!-- MODALS -->
+<div class="modal-overlay" id="registerModal" onclick="closeModal('register')">
+  <div class="modal" onclick="event.stopPropagation()">
+    <button class="modal-close" onclick="closeModal('register')">✕</button>
+    <div class="modal-title">Qarzhy-ге тіркелу</div>
+    <div class="modal-sub">Тегін тіркеліп, нарық деректеріне қол жеткіз</div>
+    <div class="form-group"><label class="form-label">Аты-жөні</label><input class="form-input" placeholder="Азамат Сейітқали"></div>
+    <div class="form-group"><label class="form-label">Email</label><input class="form-input" placeholder="azamat@email.com"></div>
+    <div class="form-group"><label class="form-label">Пароль</label><input class="form-input" type="password" placeholder="••••••••"></div>
+    <button class="form-btn" onclick="register()">Тіркелу →</button>
+    <div class="form-link">Аккаунт бар ма? <a onclick="closeModal('register');openModal('login')">Кіру</a></div>
+  </div>
+</div>
+<div class="modal-overlay" id="loginModal" onclick="closeModal('login')">
+  <div class="modal" onclick="event.stopPropagation()">
+    <button class="modal-close" onclick="closeModal('login')">✕</button>
+    <div class="modal-title">Кіру</div>
+    <div class="modal-sub">Qarzhy аккаунтыңызға кіріңіз</div>
+    <div class="form-group"><label class="form-label">Email</label><input class="form-input" placeholder="email@mail.com"></div>
+    <div class="form-group"><label class="form-label">Пароль</label><input class="form-input" type="password" placeholder="••••••••"></div>
+    <button class="form-btn" onclick="register()">Кіру →</button>
+    <div class="form-link">Аккаунт жоқ па? <a onclick="closeModal('login');openModal('register')">Тіркелу</a></div>
+  </div>
+</div>
+<div class="toast" id="toast"><span class="toast-icon">✓</span> Сәтті тіркелдіңіз! Qarzhy-ге қош келдіңіз</div>
+
+<script>
+// ═══════════════════════════════════════════════
+// НАҚТЫ API ДЕРЕКТЕРІ
+// CoinGecko (крипто) — тегін, кілтсіз
+// ExchangeRate API (валюта) — тегін, кілтсіз
+// ═══════════════════════════════════════════════
+
+// Статикалық резервтік деректер (API жұмыс істемесе)
+const FALLBACK_MARKET = [
+  {name:'KASE Индексі',sym:'KASE',price:'4 812.30',ch:'+1.24%',wk:'+3.1%',up:true,cat:'kz',em:'📊',spark:[4640,4680,4700,4660,4720,4780,4812]},
+  {name:'Halyk Bank',sym:'HSBK',price:'159.50 ₸',ch:'+0.88%',wk:'+2.4%',up:true,cat:'kz',em:'🏦',spark:[152,154,155,153,156,158,159]},
+  {name:'KazMunayGas',sym:'KMG',price:'3 640 ₸',ch:'+1.42%',wk:'+5.2%',up:true,cat:'kz',em:'🛢️',spark:[3410,3480,3500,3460,3520,3580,3640]},
+  {name:'S&P 500',sym:'SPX',price:'5 634.10',ch:'+0.48%',wk:'+1.9%',up:true,cat:'world',em:'🇺🇸',spark:[5540,5560,5580,5560,5590,5620,5634]},
+  {name:'Алтын',sym:'XAU/USD',price:'2 348.50',ch:'+0.71%',wk:'+2.1%',up:true,cat:'commodity',em:'🥇',spark:[2280,2290,2310,2300,2320,2340,2348]},
+  {name:'Brent мұнай',sym:'BRN/USD',price:'82.15',ch:'-1.05%',wk:'-2.3%',up:false,cat:'commodity',em:'🛢️',spark:[84,83,82,85,83,83,82]},
+];
+
+let MARKET_DATA = [...FALLBACK_MARKET];
+let liveRates = {USD:498.2, EUR:541.8, RUB:5.42, CNY:68.6, GBP:630.4};
+
+// ── 1. КРИПТО — CoinGecko API (тегін, кілтсіз) ──
+async function fetchCrypto() {
+  try {
+    const res = await fetch(
+      'https://api.coingecko.com/api/v3/coins/markets?vs_currency=usd&order=market_cap_desc&per_page=8&page=1&sparkline=false&price_change_percentage=24h',
+      { headers: { 'Accept': 'application/json' } }
+    );
+    if (!res.ok) throw new Error('CoinGecko қатесі');
+    const data = await res.json();
+    const EMOJIS = {bitcoin:'₿',ethereum:'Ξ','binancecoin':'🔶',solana:'◎',ripple:'✕','usd-coin':'🔵',cardano:'🔷',avalanche:'🔺'};
+    const cryptoData = data.map((c, i) => ({
+      r: i+1,
+      name: c.name,
+      sym: c.symbol.toUpperCase(),
+      price: '$' + formatNum(c.current_price),
+      ch: (c.price_change_percentage_24h >= 0 ? '+' : '') + c.price_change_percentage_24h.toFixed(2) + '%',
+      cap: formatCap(c.market_cap),
+      up: c.price_change_percentage_24h >= 0,
+      em: EMOJIS[c.id] || '🪙'
+    }));
+    renderCrypto(cryptoData);
+    updateTickerCrypto(cryptoData);
+    showLiveTag('crypto');
+  } catch(e) {
+    console.warn('CoinGecko:', e.message);
+    renderCrypto(null); // fallback
+  }
+}
+
+// ── 2. ВАЛЮТА — ExchangeRate API (тегін, кілтсіз) ──
+async function fetchCurrency() {
+  try {
+    const res = await fetch('https://open.er-api.com/v6/latest/USD');
+    if (!res.ok) throw new Error('ExchangeRate қатесі');
+    const data = await res.json();
+    if (data.result !== 'success') throw new Error('Деректер қатесі');
+
+    const kzt = data.rates.KZT;
+    liveRates = {
+      USD: kzt,
+      EUR: kzt / data.rates.EUR,
+      RUB: kzt / data.rates.RUB,
+      CNY: kzt / data.rates.CNY,
+      GBP: kzt / data.rates.GBP,
+    };
+
+    // Нарық кестесіне валюта қосу
+    const currencyRows = [
+      {name:'USD / KZT',sym:'USD/KZT',price:liveRates.USD.toFixed(2),ch:'нақты уақыт',wk:'',up:true,cat:'currency',em:'💵',spark:genSpark(liveRates.USD,0.5)},
+      {name:'EUR / KZT',sym:'EUR/KZT',price:liveRates.EUR.toFixed(2),ch:'нақты уақыт',wk:'',up:true,cat:'currency',em:'💶',spark:genSpark(liveRates.EUR,0.5)},
+      {name:'RUB / KZT',sym:'RUB/KZT',price:liveRates.RUB.toFixed(3),ch:'нақты уақыт',wk:'',up:true,cat:'currency',em:'🇷🇺',spark:genSpark(liveRates.RUB,0.02)},
+      {name:'CNY / KZT',sym:'CNY/KZT',price:liveRates.CNY.toFixed(2),ch:'нақты уақыт',wk:'',up:true,cat:'currency',em:'🇨🇳',spark:genSpark(liveRates.CNY,0.3)},
+    ];
+
+    // Негізгі кестеде валюта жолдарын жаңарту
+    MARKET_DATA = FALLBACK_MARKET.filter(m=>m.cat!=='currency').concat(currencyRows);
+
+    // Конвертор жаңарту
+    updateConverter(liveRates);
+
+    // Sidebar валюта widget жаңарту
+    updateCurrencyWidget(liveRates);
+
+    showLiveTag('currency');
+  } catch(e) {
+    console.warn('ExchangeRate:', e.message);
+  }
+}
+
+// ── 3. FEAR & GREED — Alternative.me (тегін) ──
+async function fetchFearGreed() {
+  try {
+    const res = await fetch('https://api.alternative.me/fng/?limit=1');
+    if (!res.ok) throw new Error();
+    const data = await res.json();
+    const val = parseInt(data.data[0].value);
+    const cls = data.data[0].value_classification;
+    document.getElementById('fgVal').textContent = val;
+    document.getElementById('fgNeedle').style.left = val + '%';
+    const LABELS = {
+      'Extreme Fear':'Күшті қорқыныш 😱',
+      'Fear':'Қорқыныш 😰',
+      'Neutral':'Бейтарап 😐',
+      'Greed':'Ашкөздік 😏',
+      'Extreme Greed':'Күшті ашкөздік 🤑'
+    };
+    const color = val < 25 ? '#EF4444' : val < 45 ? '#F97316' : val < 55 ? '#EAB308' : val < 75 ? '#22C55E' : '#16A34A';
+    document.getElementById('fgVal').style.color = color;
+    document.querySelector('.fg-label').textContent = LABELS[cls] || cls;
+  } catch(e) {
+    setTimeout(()=>{ document.getElementById('fgNeedle').style.left='72%'; },300);
+  }
+}
+
+// ── HELPERS ──
+function formatNum(n) {
+  if (n >= 1000) return n.toLocaleString('en-US', {maximumFractionDigits:0});
+  if (n >= 1) return n.toLocaleString('en-US', {maximumFractionDigits:2});
+  return n.toLocaleString('en-US', {maximumFractionDigits:4});
+}
+function formatCap(n) {
+  if (n >= 1e12) return '$' + (n/1e12).toFixed(2) + 'T';
+  if (n >= 1e9) return '$' + (n/1e9).toFixed(0) + 'B';
+  return '$' + (n/1e6).toFixed(0) + 'M';
+}
+function genSpark(base, jitter) {
+  return Array.from({length:7}, (_,i) => base + (Math.random()-0.5)*jitter*(i+1));
+}
+function showLiveTag(type) {
+  const el = document.getElementById('liveTag_'+type);
+  if (el) { el.style.display='inline-flex'; }
+}
+
+// ── RENDER ──
+function spark(pts, up) {
+  if (!pts?.length) return '';
+  const min = Math.min(...pts), max = Math.max(...pts);
+  const w = 120, h = 32, pad = 2;
+  const xs = pts.map((_,i)=>pad+i*(w-2*pad)/(pts.length-1));
+  const ys = pts.map(p=>h-pad-(p-min)/(max-min||1)*(h-2*pad));
+  const d = pts.map((_,i)=>`${i===0?'M':'L'}${xs[i].toFixed(1)},${ys[i].toFixed(1)}`).join(' ');
+  return `<svg width="120" height="32" viewBox="0 0 120 32"><path d="${d}" stroke="${up?'#16A34A':'#DC2626'}" stroke-width="1.5" fill="none"/></svg>`;
+}
+
+function renderMarket(cat='all') {
+  const rows = MARKET_DATA.filter(m=>cat==='all'||m.cat===cat);
+  document.getElementById('marketRows').innerHTML = rows.map(m=>`
+    <div class="market-row">
+      <div class="market-name-cell">
+        <div class="market-icon">${m.em}</div>
+        <div><div class="market-name">${m.name}</div><div class="market-sym">${m.sym}</div></div>
+      </div>
+      <div class="market-price-cell">${m.price}</div>
+      <div><span class="market-chg ${m.up?'up':'down'}">${m.ch.includes('нақты')?'<span style="font-size:10px;color:#7A9E8A">Live ✓</span>':((m.up?'▲':'▼')+' '+m.ch)}</span></div>
+      <div>${m.wk?`<span class="market-chg ${m.wk.startsWith('-')?'down':'up'}">${m.wk}</span>`:''}</div>
+      <div class="spark-cell">${spark(m.spark,m.up)}</div>
+    </div>`).join('');
+}
+
+function renderCrypto(data) {
+  const list = data || [
+    {r:1,name:'Bitcoin',sym:'BTC',price:'жүктелуде...',ch:'—',cap:'—',up:true,em:'₿'},
+    {r:2,name:'Ethereum',sym:'ETH',price:'жүктелуде...',ch:'—',cap:'—',up:true,em:'Ξ'},
+  ];
+  document.getElementById('cryptoRows').innerHTML = list.map(c=>`
+    <div class="crypto-row">
+      <span class="crypto-rank">${c.r}</span>
+      <div class="crypto-info">
+        <div class="crypto-icon">${c.em}</div>
+        <div><div class="crypto-name">${c.name}</div><div class="crypto-sym">${c.sym}</div></div>
+      </div>
+      <div class="crypto-price">${c.price}</div>
+      <div class="crypto-chg ${c.up?'up':'down'}">${c.ch!=='—'?(c.up?'▲':'▼')+' '+c.ch:'—'}</div>
+      <div class="crypto-cap">${c.cap}</div>
+    </div>`).join('');
+}
+
+function renderTicker(cryptoData) {
+  const base = [
+    {sym:'USD/KZT',price:liveRates.USD.toFixed(1),up:true},
+    {sym:'EUR/KZT',price:liveRates.EUR.toFixed(1),up:true},
+  ];
+  const cryptoItems = (cryptoData||[]).slice(0,5).map(c=>({sym:c.sym,price:c.price,ch:c.ch,up:c.up}));
+  const all = [...base.map(t=>`<span class="tick-item"><span class="tick-name">${t.sym}</span><span class="tick-price">${t.price} ₸</span><span class="tick-up">Live</span></span>`),
+    ...cryptoItems.map(t=>`<span class="tick-item"><span class="tick-name">${t.sym}</span><span class="tick-price">${t.price}</span><span class="${t.up?'tick-up':'tick-down'}">${t.up?'▲':'▼'}${t.ch}</span></span>`)].join('');
+  document.getElementById('tickerScroll').innerHTML = all+all;
+}
+
+function updateTickerCrypto(cryptoData) {
+  renderTicker(cryptoData);
+}
+
+function updateConverter(rates) {
+  // Конвертор select мәндерін жаңарту
+  const fromSel = document.getElementById('convFrom');
+  const toSel = document.getElementById('convTo');
+  fromSel.innerHTML = `
+    <option value="1">USD</option>
+    <option value="${1/rates.USD}">KZT</option>
+    <option value="${rates.EUR/rates.USD}">EUR</option>
+    <option value="${rates.GBP/rates.USD}">GBP</option>
+    <option value="${rates.RUB/rates.USD}">RUB</option>
+    <option value="${rates.CNY/rates.USD}">CNY</option>`;
+  toSel.innerHTML = `
+    <option value="${rates.USD}">KZT</option>
+    <option value="1">USD</option>
+    <option value="${rates.EUR}">EUR</option>
+    <option value="${rates.GBP}">GBP</option>`;
+  calcConv();
+}
+
+function updateCurrencyWidget(rates) {
+  const el = document.querySelector('.widget-body');
+  if (!el) return;
+  const rows = [
+    {flag:'🇺🇸',name:'USD',val:rates.USD.toFixed(2)},
+    {flag:'🇪🇺',name:'EUR',val:rates.EUR.toFixed(2)},
+    {flag:'🇷🇺',name:'RUB',val:rates.RUB.toFixed(3)},
+    {flag:'🇨🇳',name:'CNY',val:rates.CNY.toFixed(2)},
+    {flag:'🇬🇧',name:'GBP',val:rates.GBP.toFixed(2)},
+  ];
+  el.innerHTML = rows.map(r=>`
+    <div class="widget-row">
+      <span class="widget-lbl">${r.flag} ${r.name}</span>
+      <span class="widget-val up">${r.val} ₸ <span style="font-size:9px;color:#7A9E8A">Live</span></span>
+    </div>`).join('');
+}
+
+// ── НЕГІЗГІ ФУНКЦИЯЛАР ──
+function filterMkt(btn,cat){
+  document.querySelectorAll('.cat-tab').forEach(b=>b.classList.remove('active'));
+  btn.classList.add('active'); renderMarket(cat);
+}
+function filterNews(btn,cat){
+  document.querySelectorAll('.cat-tab').forEach(b=>b.classList.remove('active'));
+  btn.classList.add('active');
+  document.querySelectorAll('#newsFeatured .news-card-big,#newsList .news-card-sm').forEach(c=>{
+    c.style.display=(cat==='all'||c.dataset.cat===cat)?'':'none';
+  });
+}
+function goto(id){document.getElementById(id)?.scrollIntoView({behavior:'smooth',block:'start'})}
+function openModal(t){document.getElementById(t+'Modal').classList.add('open');document.body.style.overflow='hidden'}
+function closeModal(t){document.getElementById(t+'Modal').classList.remove('open');document.body.style.overflow=''}
+function register(){closeModal('register');closeModal('login');const t=document.getElementById('toast');t.classList.add('show');setTimeout(()=>t.classList.remove('show'),3500)}
+
+function calcConv(){
+  const amt = parseFloat(document.getElementById('convAmt').value)||0;
+  const from = parseFloat(document.getElementById('convFrom').value)||1;
+  const to = parseFloat(document.getElementById('convTo').value)||1;
+  const result = (amt * from * to).toLocaleString('kk-KZ',{maximumFractionDigits:2});
+  document.getElementById('convResult').textContent = result + ' ₸';
+}
+
+// Nav scroll highlight
+window.addEventListener('scroll',()=>{
+  const ids=['market','news','ideas','crypto','courses','forum'];
+  const labels={market:'Нарық',news:'Жаңалықтар',ideas:'Идеялар',crypto:'Крипто',courses:'Оқыту',forum:'Форум'};
+  let cur='';
+  ids.forEach(id=>{const el=document.getElementById(id);if(el&&window.scrollY>=el.offsetTop-100)cur=id});
+  document.querySelectorAll('.nav-link').forEach(l=>{
+    l.classList.toggle('active', cur && l.textContent.trim()===labels[cur]);
+  });
+});
+
+// ── ІСКЕ ҚОСУ ──
+renderMarket();
+renderCrypto(null);
+renderTicker(null);
+calcConv();
+
+// API-ларды параллель жүктеу
+Promise.all([fetchCrypto(), fetchCurrency(), fetchFearGreed()]).then(()=>{
+  renderMarket('all');
+});
+
+// Әр 60 секунд сайын жаңарту
+setInterval(()=>{
+  fetchCrypto();
+  fetchCurrency();
+}, 60000);
+</script>
+</body>
+</html>

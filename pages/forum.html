@@ -1,0 +1,266 @@
+<!DOCTYPE html>
+<html lang="kk">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Форум — Qarzhy.kz</title>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script src="../config.js"></script>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@500&display=swap" rel="stylesheet">
+<style>
+:root{--bg:#F7F9F8;--bg2:#fff;--bg3:#EEF4F0;--border:#DDE8E2;--green:#0A7A3E;--green2:#12A055;--green-light:#E6F7EE;--gold:#C89A00;--red:#C0392B;--blue:#1A56DB;--text:#0F1F17;--text2:#3D5C4A;--text3:#7A9E8A;--shadow:0 1px 3px rgba(0,0,0,0.06);--r:8px;--r2:12px}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+body{background:var(--bg);color:var(--text);font-family:'Inter',sans-serif;font-size:14px}
+nav{position:sticky;top:0;z-index:100;background:rgba(255,255,255,0.95);backdrop-filter:blur(12px);border-bottom:1px solid var(--border);padding:0 20px}
+.nav-inner{max-width:1200px;margin:0 auto;display:flex;align-items:center;height:52px;gap:24px}
+.logo{font-family:'JetBrains Mono',monospace;font-size:18px;font-weight:700;color:var(--text);text-decoration:none}
+.logo span{color:var(--green)}
+.nav-links{display:flex;gap:4px}
+.nav-link{padding:6px 12px;border-radius:6px;color:var(--text2);font-size:13px;font-weight:500;text-decoration:none;cursor:pointer;border:none;background:none}
+.nav-link:hover,.nav-link.active{color:var(--green);background:var(--green-light)}
+.btn{padding:7px 16px;border-radius:7px;font-size:13px;font-weight:600;border:none;cursor:pointer;transition:all 0.15s}
+.btn-primary{background:var(--green);color:#fff}.btn-primary:hover{background:var(--green2)}
+.btn-outline{background:transparent;color:var(--text2);border:1px solid var(--border)}.btn-outline:hover{border-color:var(--green);color:var(--green)}
+.container{max-width:1200px;margin:0 auto;padding:28px 20px}
+.page-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:24px}
+.page-title{font-size:22px;font-weight:700;display:flex;align-items:center;gap:8px}
+.page-title::before{content:'';width:3px;height:22px;background:var(--green);border-radius:2px}
+.layout{display:grid;grid-template-columns:1fr 280px;gap:20px}
+@media(max-width:768px){.layout{grid-template-columns:1fr}}
+.cat-tabs{display:flex;gap:6px;overflow-x:auto;scrollbar-width:none;margin-bottom:16px}
+.cat-tabs::-webkit-scrollbar{display:none}
+.cat-tab{padding:6px 14px;border-radius:6px;font-size:12px;font-weight:500;border:1px solid var(--border);background:var(--bg2);color:var(--text2);cursor:pointer;white-space:nowrap}
+.cat-tab.active{background:var(--green);color:#fff;border-color:var(--green)}
+.post-card{background:var(--bg2);border:1px solid var(--border);border-radius:var(--r2);padding:16px 18px;display:flex;gap:14px;cursor:pointer;transition:all 0.15s;margin-bottom:8px;box-shadow:var(--shadow)}
+.post-card:hover{border-color:var(--green);box-shadow:0 4px 12px rgba(0,0,0,0.08)}
+.post-avatar{width:40px;height:40px;border-radius:9px;background:var(--green-light);display:flex;align-items:center;justify-content:center;font-size:18px;flex-shrink:0}
+.post-body{flex:1;min-width:0}
+.post-title{font-size:14px;font-weight:600;color:var(--text);margin-bottom:5px;line-height:1.4}
+.post-meta{display:flex;align-items:center;gap:6px;flex-wrap:wrap}
+.tag{padding:2px 8px;border-radius:4px;font-size:10px;font-weight:700;text-transform:uppercase}
+.tag-stocks{background:#EFF6FF;color:#1D4ED8}
+.tag-crypto{background:#FEF9C3;color:#A16207}
+.tag-economy{background:var(--green-light);color:var(--green)}
+.tag-currency{background:#F5F3FF;color:#6D28D9}
+.tag-invest{background:#FFF7ED;color:#C2410C}
+.post-time{font-size:11px;color:var(--text3)}
+.post-stats{display:flex;gap:14px;flex-shrink:0;align-items:center}
+.post-stat{text-align:center}
+.post-stat-num{font-family:'JetBrains Mono',monospace;font-size:14px;font-weight:600;color:var(--text2)}
+.post-stat-lbl{font-size:10px;color:var(--text3)}
+.sidebar-widget{background:var(--bg2);border:1px solid var(--border);border-radius:var(--r2);padding:16px;margin-bottom:14px;box-shadow:var(--shadow)}
+.widget-title{font-size:12px;font-weight:600;color:var(--text2);text-transform:uppercase;letter-spacing:0.5px;margin-bottom:12px}
+.top-user{display:flex;align-items:center;gap:10px;margin-bottom:10px}
+.top-user-ava{width:34px;height:34px;border-radius:8px;background:var(--green-light);display:flex;align-items:center;justify-content:center;font-size:15px}
+.top-user-name{font-size:13px;font-weight:600;color:var(--text)}
+.top-user-rep{font-size:11px;color:var(--text3)}
+.post-detail{display:none;background:var(--bg2);border:1px solid var(--border);border-radius:var(--r2);padding:24px;margin-bottom:14px;box-shadow:var(--shadow)}
+.post-detail.open{display:block}
+.post-detail-title{font-size:20px;font-weight:700;margin-bottom:10px;line-height:1.4}
+.post-detail-content{font-size:14px;color:var(--text2);line-height:1.8;margin-bottom:18px}
+.answer-card{background:var(--bg3);border:1px solid var(--border);border-radius:var(--r);padding:14px;margin-bottom:8px}
+.answer-card.accepted{border-color:var(--green);background:var(--green-light)}
+.answer-author{display:flex;align-items:center;gap:8px;margin-bottom:8px}
+.answer-ava{width:28px;height:28px;border-radius:7px;background:var(--bg2);display:flex;align-items:center;justify-content:center;font-size:13px}
+.answer-name{font-size:12px;font-weight:600;color:var(--text)}
+.answer-time{font-size:11px;color:var(--text3)}
+.answer-content{font-size:13px;color:var(--text2);line-height:1.7}
+.form-input,.form-textarea,.form-select{width:100%;background:var(--bg3);border:1px solid var(--border);border-radius:7px;padding:10px 12px;color:var(--text);font-size:13px;font-family:'Inter',sans-serif;outline:none;transition:border-color 0.15s}
+.form-input:focus,.form-textarea:focus,.form-select:focus{border-color:var(--green);background:#fff}
+.form-textarea{resize:vertical;min-height:100px}
+.form-label{font-size:12px;font-weight:500;color:var(--text2);margin-bottom:5px;display:block}
+.form-group{margin-bottom:12px}
+.form-select option{background:#fff}
+.modal-overlay{position:fixed;inset:0;background:rgba(0,0,0,0.4);backdrop-filter:blur(4px);z-index:200;display:none;align-items:center;justify-content:center;padding:20px}
+.modal-overlay.open{display:flex}
+.modal{background:#fff;border-radius:14px;padding:28px;max-width:500px;width:100%;position:relative;box-shadow:0 20px 60px rgba(0,0,0,0.15)}
+.modal-close{position:absolute;top:12px;right:12px;background:var(--bg3);border:none;color:var(--text2);width:28px;height:28px;border-radius:6px;cursor:pointer;font-size:16px;display:flex;align-items:center;justify-content:center}
+.modal-title{font-size:18px;font-weight:700;margin-bottom:6px}
+.modal-sub{font-size:13px;color:var(--text2);margin-bottom:18px}
+.back-btn{display:inline-flex;align-items:center;gap:6px;background:var(--bg3);border:1px solid var(--border);color:var(--text2);padding:6px 14px;border-radius:7px;cursor:pointer;font-size:12px;margin-bottom:16px}
+.back-btn:hover{color:var(--text);border-color:var(--green)}
+.toast{position:fixed;bottom:20px;right:20px;background:var(--text);color:#fff;border-radius:8px;padding:12px 18px;font-size:13px;font-weight:500;z-index:300;transform:translateY(60px);opacity:0;transition:all 0.3s;display:flex;align-items:center;gap:8px}
+.toast.show{transform:translateY(0);opacity:1}
+.loading{text-align:center;padding:48px;color:var(--text3)}
+.empty{text-align:center;padding:60px;color:var(--text3)}
+</style>
+</head>
+<body>
+<nav>
+  <div class="nav-inner">
+    <a class="logo" href="../index.html"><span>₸</span>Qarzhy</a>
+    <div class="nav-links">
+      <a class="nav-link" href="../index.html">Нарық</a>
+      <a class="nav-link" href="../index.html#news">Жаңалықтар</a>
+      <a class="nav-link" href="ideas.html">Идеялар</a>
+      <a class="nav-link" href="courses.html">Оқыту</a>
+      <a class="nav-link active" href="forum.html">Форум</a>
+    </div>
+    <div style="margin-left:auto;display:flex;gap:8px" id="navAuth"></div>
+  </div>
+</nav>
+
+<div class="container">
+  <div class="page-header">
+    <div class="page-title">Инвестор форумы</div>
+    <button class="btn btn-primary" onclick="openAsk()">+ Сұрақ қою</button>
+  </div>
+  <div class="layout">
+    <div>
+      <div class="cat-tabs">
+        <button class="cat-tab active" onclick="filterCat(this,'all')">Барлығы</button>
+        <button class="cat-tab" onclick="filterCat(this,'stocks')">Акциялар</button>
+        <button class="cat-tab" onclick="filterCat(this,'crypto')">Крипто</button>
+        <button class="cat-tab" onclick="filterCat(this,'economy')">Экономика</button>
+        <button class="cat-tab" onclick="filterCat(this,'currency')">Валюта</button>
+        <button class="cat-tab" onclick="filterCat(this,'invest')">Инвестиция</button>
+      </div>
+      <div id="postDetail" class="post-detail"></div>
+      <div id="postsList"><div class="loading">Жүктелуде...</div></div>
+    </div>
+    <div>
+      <div class="sidebar-widget">
+        <div class="widget-title">Үздік мүшелер</div>
+        <div class="top-user"><div class="top-user-ava">👨‍💼</div><div><div class="top-user-name">Азамат С.</div><div class="top-user-rep">⭐ 1 840 ұпай</div></div></div>
+        <div class="top-user"><div class="top-user-ava">👩‍💼</div><div><div class="top-user-name">Айгерім Т.</div><div class="top-user-rep">⭐ 1 240 ұпай</div></div></div>
+        <div class="top-user"><div class="top-user-ava">🧑‍💼</div><div><div class="top-user-name">Нұрлан Б.</div><div class="top-user-rep">⭐ 980 ұпай</div></div></div>
+      </div>
+      <div class="sidebar-widget">
+        <div class="widget-title">Танымал тегтер</div>
+        <div style="display:flex;flex-wrap:wrap;gap:5px">
+          <span class="tag tag-stocks">KASE</span><span class="tag tag-crypto">Bitcoin</span>
+          <span class="tag tag-economy">Инфляция</span><span class="tag tag-currency">USD/KZT</span>
+          <span class="tag tag-invest">ETF</span><span class="tag tag-stocks">KMG</span>
+          <span class="tag tag-crypto">Ethereum</span><span class="tag tag-invest">Дивиденд</span>
+        </div>
+      </div>
+      <div class="sidebar-widget" style="background:var(--green-light);border-color:var(--green)">
+        <div style="font-size:13px;font-weight:600;color:var(--green);margin-bottom:6px">💡 Ескерту</div>
+        <div style="font-size:12px;color:var(--text2);line-height:1.6">Форумдағы пікірлер қаржылық кеңес болып табылмайды. Инвестиция алдында өз зерттеуіңізді жүргізіңіз.</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="modal-overlay" id="askModal" onclick="closeAsk()">
+  <div class="modal" onclick="event.stopPropagation()">
+    <button class="modal-close" onclick="closeAsk()">✕</button>
+    <div class="modal-title">Сұрақ қою</div>
+    <div class="modal-sub">Нақты және толық жазсаң жақсы жауап аласың</div>
+    <div class="form-group"><label class="form-label">Тақырып</label><input class="form-input" id="postTitle" placeholder="Мысалы: KASE-ге немесе ETF-ке салу тиімдірек?"></div>
+    <div class="form-group"><label class="form-label">Санат</label>
+      <select class="form-select" id="postCat">
+        <option value="stocks">Акциялар</option>
+        <option value="crypto">Крипто</option>
+        <option value="economy">Экономика</option>
+        <option value="currency">Валюта</option>
+        <option value="invest">Инвестиция</option>
+      </select>
+    </div>
+    <div class="form-group"><label class="form-label">Мазмұны</label><textarea class="form-textarea" id="postContent" placeholder="Мәселені толық сипатта..."></textarea></div>
+    <button class="btn btn-primary" style="width:100%" onclick="submitPost()">Жариялау →</button>
+  </div>
+</div>
+
+<div class="toast" id="toast"></div>
+
+<script>
+const sb = supabase.createClient(CONFIG.SUPABASE_URL, CONFIG.SUPABASE_KEY);
+let currentUser = null, currentCat = 'all';
+const EMOJIS = {stocks:'📈',crypto:'₿',economy:'🏦',currency:'💵',invest:'💼'};
+const TAG_CLASS = {stocks:'tag-stocks',crypto:'tag-crypto',economy:'tag-economy',currency:'tag-currency',invest:'tag-invest'};
+const CAT_LABELS = {stocks:'Акциялар',crypto:'Крипто',economy:'Экономика',currency:'Валюта',invest:'Инвестиция'};
+
+function timeAgo(d){const diff=Date.now()-new Date(d).getTime(),m=Math.floor(diff/60000),h=Math.floor(m/60),days=Math.floor(h/24);if(m<60)return`${m} мин. бұрын`;if(h<24)return`${h} сағ. бұрын`;return`${days} күн бұрын`}
+function showToast(msg,c='var(--green)'){const t=document.getElementById('toast');t.textContent=msg;t.style.borderLeft=`3px solid ${c}`;t.classList.add('show');setTimeout(()=>t.classList.remove('show'),3000)}
+
+async function init(){
+  const{data:{user}}=await sb.auth.getUser();currentUser=user;
+  const el=document.getElementById('navAuth');
+  if(user){el.innerHTML=`<span style="font-size:13px;color:var(--text2)">${user.email}</span><button class="btn btn-outline" onclick="sb.auth.signOut().then(()=>location.reload())">Шығу</button>`}
+  else{el.innerHTML=`<button class="btn btn-primary" onclick="window.location.href='../index.html'">Тіркелу</button>`}
+  loadPosts();
+}
+
+async function loadPosts(cat='all'){
+  const el=document.getElementById('postsList');
+  el.innerHTML='<div class="loading">Жүктелуде...</div>';
+  let q=sb.from('forum_posts').select('*,profiles(username),forum_answers(count)').order('created_at',{ascending:false});
+  if(cat!=='all')q=q.eq('category',cat);
+  const{data}=await q;
+  if(!data?.length){el.innerHTML='<div class="empty">💬<br><br>Әзірге сұрақ жоқ.<br>Бірінші болып сұрақ қой!</div>';return}
+  el.innerHTML=data.map(p=>`
+    <div class="post-card" onclick="openPost(${p.id})">
+      <div class="post-avatar">${EMOJIS[p.category]||'💬'}</div>
+      <div class="post-body">
+        <div class="post-title">${p.title}</div>
+        <div class="post-meta">
+          <span class="tag ${TAG_CLASS[p.category]||''}">${CAT_LABELS[p.category]||p.category}</span>
+          <span class="post-time">${p.profiles?.username||'Белгісіз'} · ${timeAgo(p.created_at)}</span>
+          ${p.is_solved?'<span style="font-size:10px;font-weight:700;color:var(--green);background:var(--green-light);padding:2px 7px;border-radius:4px">✓ Шешілді</span>':''}
+        </div>
+      </div>
+      <div class="post-stats">
+        <div class="post-stat"><div class="post-stat-num" style="color:var(--green)">${p.forum_answers?.[0]?.count||0}</div><div class="post-stat-lbl">жауап</div></div>
+        <div class="post-stat"><div class="post-stat-num">${p.views||0}</div><div class="post-stat-lbl">қараған</div></div>
+      </div>
+    </div>`).join('');
+}
+
+async function openPost(id){
+  const detail=document.getElementById('postDetail');
+  detail.innerHTML='<div class="loading">Жүктелуде...</div>';
+  detail.classList.add('open');detail.scrollIntoView({behavior:'smooth'});
+  const{data:post}=await sb.from('forum_posts').select('*,profiles(username)').eq('id',id).single();
+  await sb.from('forum_posts').update({views:(post.views||0)+1}).eq('id',id);
+  const{data:answers}=await sb.from('forum_answers').select('*,profiles(username)').eq('post_id',id).order('created_at');
+  detail.innerHTML=`
+    <button class="back-btn" onclick="document.getElementById('postDetail').classList.remove('open')">← Артқа</button>
+    <div style="display:flex;align-items:center;gap:8px;margin-bottom:10px">
+      <span class="tag ${TAG_CLASS[post.category]||''}">${CAT_LABELS[post.category]||post.category}</span>
+      <span style="font-size:11px;color:var(--text3)">${post.profiles?.username} · ${timeAgo(post.created_at)}</span>
+    </div>
+    <div class="post-detail-title">${post.title}</div>
+    <div class="post-detail-content">${post.content}</div>
+    <div style="font-size:13px;font-weight:600;color:var(--text2);margin-bottom:10px">${answers?.length||0} жауап</div>
+    ${(answers||[]).map(a=>`
+      <div class="answer-card ${a.is_accepted?'accepted':''}">
+        ${a.is_accepted?'<div style="font-size:10px;font-weight:700;color:var(--green);margin-bottom:6px">✓ Қабылданған жауап</div>':''}
+        <div class="answer-author">
+          <div class="answer-ava">👤</div>
+          <div><div class="answer-name">${a.profiles?.username||'Белгісіз'}</div><div class="answer-time">${timeAgo(a.created_at)}</div></div>
+        </div>
+        <div class="answer-content">${a.content}</div>
+      </div>`).join('')}
+    <div style="background:var(--bg3);border:1px solid var(--border);border-radius:var(--r);padding:14px;margin-top:12px">
+      <div style="font-size:13px;font-weight:600;margin-bottom:10px">Жауап жазу</div>
+      <textarea class="form-textarea" id="answerText" placeholder="Жауабыңды осында жаз..." style="margin-bottom:8px"></textarea>
+      <button class="btn btn-primary" onclick="submitAnswer(${id})">Жариялау →</button>
+    </div>`;
+}
+
+async function submitAnswer(postId){
+  if(!currentUser){showToast('⚠️ Жауап беру үшін тіркелу керек');return}
+  const content=document.getElementById('answerText').value.trim();
+  if(!content)return;
+  const{error}=await sb.from('forum_answers').insert({post_id:postId,user_id:currentUser.id,content});
+  if(!error){showToast('✓ Жауабыңыз жарияланды!');openPost(postId)}
+}
+
+async function submitPost(){
+  if(!currentUser){closeAsk();window.location.href='../index.html';return}
+  const title=document.getElementById('postTitle').value.trim();
+  const content=document.getElementById('postContent').value.trim();
+  const category=document.getElementById('postCat').value;
+  if(!title||!content){showToast('⚠️ Барлық өрістерді толтыр');return}
+  const{error}=await sb.from('forum_posts').insert({title,content,category,user_id:currentUser.id});
+  if(!error){closeAsk();showToast('✓ Сұрағыңыз жарияланды!');loadPosts(currentCat)}
+}
+
+function filterCat(btn,cat){document.querySelectorAll('.cat-tab').forEach(b=>b.classList.remove('active'));btn.classList.add('active');currentCat=cat;document.getElementById('postDetail').classList.remove('open');loadPosts(cat)}
+function openAsk(){document.getElementById('askModal').classList.add('open')}
+function closeAsk(){document.getElementById('askModal').classList.remove('open')}
+init();
+</script>
+</body>
+</html>

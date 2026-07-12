@@ -1,0 +1,204 @@
+<!DOCTYPE html>
+<html lang="kk">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Курстар — Qarzhy.kz</title>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script src="../config.js"></script>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@500&display=swap" rel="stylesheet">
+<style>
+:root{--bg:#F7F9F8;--bg2:#fff;--bg3:#EEF4F0;--border:#DDE8E2;--green:#0A7A3E;--green2:#12A055;--green-light:#E6F7EE;--gold:#C89A00;--gold-light:#FFF8E1;--text:#0F1F17;--text2:#3D5C4A;--text3:#7A9E8A;--shadow:0 1px 3px rgba(0,0,0,0.06);--r:8px;--r2:12px}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+body{background:var(--bg);color:var(--text);font-family:'Inter',sans-serif;font-size:14px}
+nav{position:sticky;top:0;z-index:100;background:rgba(255,255,255,0.95);backdrop-filter:blur(12px);border-bottom:1px solid var(--border);padding:0 20px}
+.nav-inner{max-width:1200px;margin:0 auto;display:flex;align-items:center;height:52px;gap:24px}
+.logo{font-family:'JetBrains Mono',monospace;font-size:18px;font-weight:700;color:var(--text);text-decoration:none}
+.logo span{color:var(--green)}
+.nav-links{display:flex;gap:4px}
+.nav-link{padding:6px 12px;border-radius:6px;color:var(--text2);font-size:13px;font-weight:500;text-decoration:none;cursor:pointer;border:none;background:none}
+.nav-link:hover,.nav-link.active{color:var(--green);background:var(--green-light)}
+.btn{padding:7px 16px;border-radius:7px;font-size:13px;font-weight:600;border:none;cursor:pointer}
+.btn-primary{background:var(--green);color:#fff}
+.btn-outline{background:transparent;color:var(--text2);border:1px solid var(--border)}
+.btn-outline:hover{border-color:var(--green);color:var(--green)}
+.container{max-width:1200px;margin:0 auto;padding:28px 20px}
+.page-title{font-size:22px;font-weight:700;margin-bottom:6px;display:flex;align-items:center;gap:8px}
+.page-title::before{content:'';width:3px;height:22px;background:var(--green);border-radius:2px}
+.page-sub{font-size:13px;color:var(--text3);margin-bottom:24px}
+.cat-tabs{display:flex;gap:6px;overflow-x:auto;scrollbar-width:none;margin-bottom:20px}
+.cat-tabs::-webkit-scrollbar{display:none}
+.cat-tab{padding:6px 14px;border-radius:6px;font-size:12px;font-weight:500;border:1px solid var(--border);background:var(--bg2);color:var(--text2);cursor:pointer;white-space:nowrap}
+.cat-tab.active{background:var(--green);color:#fff;border-color:var(--green)}
+.courses-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:16px}
+@media(max-width:900px){.courses-grid{grid-template-columns:1fr 1fr}}
+@media(max-width:580px){.courses-grid{grid-template-columns:1fr}}
+.course-card{background:var(--bg2);border:1px solid var(--border);border-radius:var(--r2);overflow:hidden;cursor:pointer;transition:all 0.15s;box-shadow:var(--shadow)}
+.course-card:hover{transform:translateY(-2px);box-shadow:0 6px 20px rgba(0,0,0,0.1);border-color:var(--border)}
+.course-thumb{height:130px;display:flex;align-items:center;justify-content:center;font-size:52px}
+.course-body{padding:16px}
+.level-badge{font-size:10px;font-weight:700;padding:2px 8px;border-radius:4px;margin-bottom:8px;display:inline-block}
+.level-beginner{background:var(--green-light);color:var(--green)}
+.level-intermediate{background:var(--gold-light);color:var(--gold)}
+.level-advanced{background:#FEE2E2;color:#B91C1C}
+.course-title{font-size:14px;font-weight:700;color:var(--text);margin-bottom:8px;line-height:1.4}
+.course-meta{display:flex;align-items:center;gap:8px;font-size:11px;color:var(--text3)}
+.stars{color:var(--gold)}
+.free-tag{font-size:10px;font-weight:700;color:var(--green);background:var(--green-light);padding:2px 6px;border-radius:4px;margin-left:auto}
+.lesson-layout{display:none;grid-template-columns:280px 1fr;min-height:calc(100vh - 52px)}
+.lesson-layout.open{display:grid}
+.courses-view.hide{display:none}
+.lesson-sidebar{background:var(--bg2);border-right:1px solid var(--border);overflow-y:auto}
+.lesson-sidebar-top{padding:16px;border-bottom:1px solid var(--border)}
+.back-btn{display:inline-flex;align-items:center;gap:6px;background:var(--bg3);border:1px solid var(--border);color:var(--text2);padding:6px 12px;border-radius:6px;cursor:pointer;font-size:12px;margin-bottom:10px}
+.back-btn:hover{border-color:var(--green);color:var(--green)}
+.course-name-sm{font-size:13px;font-weight:700;color:var(--text);line-height:1.3}
+.lesson-item{padding:12px 16px;cursor:pointer;transition:all 0.15s;display:flex;align-items:center;gap:10px;border-left:2px solid transparent;border-bottom:1px solid var(--border)}
+.lesson-item:hover{background:var(--bg3)}
+.lesson-item.active{background:var(--green-light);border-left-color:var(--green)}
+.lesson-num{width:24px;height:24px;border-radius:6px;background:var(--bg3);display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:600;color:var(--text3);flex-shrink:0}
+.lesson-item.active .lesson-num{background:var(--green);color:#fff}
+.lesson-name{font-size:12px;font-weight:500;color:var(--text2);line-height:1.3}
+.lesson-item.active .lesson-name{color:var(--text);font-weight:600}
+.lesson-dur{font-size:10px;color:var(--text3);margin-left:auto;white-space:nowrap}
+.lesson-content{padding:28px;overflow-y:auto;background:var(--bg)}
+.lesson-title{font-size:22px;font-weight:800;margin-bottom:6px;color:var(--text)}
+.lesson-meta{font-size:12px;color:var(--text3);margin-bottom:20px;display:flex;gap:12px}
+.video-frame{width:100%;aspect-ratio:16/9;background:var(--bg2);border:1px solid var(--border);border-radius:var(--r2);overflow:hidden;margin-bottom:20px}
+.video-frame iframe{width:100%;height:100%;border:none}
+.lesson-body{font-size:14px;color:var(--text2);line-height:1.8}
+.lesson-body h2{font-size:17px;font-weight:700;color:var(--text);margin:20px 0 8px}
+.lesson-body p{margin-bottom:12px}
+.lesson-body pre{background:var(--bg2);border:1px solid var(--border);border-radius:var(--r);padding:14px;font-family:'JetBrains Mono',monospace;font-size:12px;overflow-x:auto;margin:12px 0}
+.lesson-nav{display:flex;justify-content:space-between;margin-top:28px;padding-top:20px;border-top:1px solid var(--border)}
+.loading{text-align:center;padding:48px;color:var(--text3)}
+</style>
+</head>
+<body>
+<nav>
+  <div class="nav-inner">
+    <a class="logo" href="../index.html"><span>₸</span>Qarzhy</a>
+    <div class="nav-links">
+      <a class="nav-link" href="../index.html">Нарық</a>
+      <a class="nav-link" href="../index.html#news">Жаңалықтар</a>
+      <a class="nav-link" href="ideas.html">Идеялар</a>
+      <a class="nav-link active" href="courses.html">Оқыту</a>
+      <a class="nav-link" href="forum.html">Форум</a>
+    </div>
+    <div style="margin-left:auto;display:flex;gap:8px" id="navAuth"></div>
+  </div>
+</nav>
+
+<div class="courses-view" id="coursesView">
+  <div class="container">
+    <div class="page-title">Қаржылық сауаттылық курстары</div>
+    <div class="page-sub">Инвестиция, крипто, техникалық талдау — қазақ тілінде, видео + PDF материалдарымен</div>
+    <div class="cat-tabs">
+      <button class="cat-tab active" onclick="filterCat(this,'all')">Барлығы</button>
+      <button class="cat-tab" onclick="filterCat(this,'basics')">Негіздер</button>
+      <button class="cat-tab" onclick="filterCat(this,'crypto')">Крипто</button>
+      <button class="cat-tab" onclick="filterCat(this,'technical')">Техникалық</button>
+      <button class="cat-tab" onclick="filterCat(this,'fundamental')">Фундаментальды</button>
+    </div>
+    <div class="courses-grid" id="coursesGrid"><div class="loading">Жүктелуде...</div></div>
+  </div>
+</div>
+
+<div class="lesson-layout" id="lessonLayout">
+  <div class="lesson-sidebar">
+    <div class="lesson-sidebar-top">
+      <button class="back-btn" onclick="showCourses()">← Курстарға оралу</button>
+      <div class="course-name-sm" id="courseName"></div>
+    </div>
+    <div id="lessonsList"></div>
+  </div>
+  <div class="lesson-content" id="lessonContent">
+    <div class="loading">Сабақты таңдаңыз...</div>
+  </div>
+</div>
+
+<script>
+const sb = supabase.createClient(CONFIG.SUPABASE_URL, CONFIG.SUPABASE_KEY);
+let allCourses = [], currentCat = 'all';
+const LEVEL_CLASS = {beginner:'level-beginner',intermediate:'level-intermediate',advanced:'level-advanced'};
+const LEVEL_LABELS = {beginner:'Бастауыш',intermediate:'Орташа',advanced:'Жоғары'};
+const GRAD_MAP = {basics:'linear-gradient(135deg,#0A7A3E,#0D5C30)',crypto:'linear-gradient(135deg,#92400E,#B45309)',technical:'linear-gradient(135deg,#1E40AF,#1D4ED8)',fundamental:'linear-gradient(135deg,#5B21B6,#7C3AED)'};
+
+async function init(){
+  const{data:{user}}=await sb.auth.getUser();
+  const el=document.getElementById('navAuth');
+  if(user){el.innerHTML=`<span style="font-size:13px;color:var(--text2)">${user.email}</span><button class="btn btn-outline" onclick="sb.auth.signOut().then(()=>location.reload())">Шығу</button>`}
+  else{el.innerHTML=`<button class="btn btn-primary" onclick="window.location.href='../index.html'">Тіркелу</button>`}
+  loadCourses();
+}
+
+async function loadCourses(cat='all'){
+  const el=document.getElementById('coursesGrid');
+  el.innerHTML='<div class="loading">Жүктелуде...</div>';
+  let q=sb.from('courses').select('*,lessons(count)').order('id');
+  if(cat!=='all')q=q.eq('category',cat);
+  const{data}=await q;
+  allCourses=data||[];
+  el.innerHTML=allCourses.map(c=>`
+    <div class="course-card" onclick="openCourse(${c.id})">
+      <div class="course-thumb" style="background:${GRAD_MAP[c.category]||GRAD_MAP.basics}">${c.thumbnail_emoji||'📊'}</div>
+      <div class="course-body">
+        <div class="level-badge ${LEVEL_CLASS[c.level]||'level-beginner'}">${LEVEL_LABELS[c.level]||c.level}</div>
+        <div class="course-title">${c.title}</div>
+        <div class="course-meta">
+          <span class="stars">★★★★★</span>
+          <span>${c.rating||5.0} (${c.reviews_count||0})</span>
+          <span>· ${c.lessons?.[0]?.count||0} сабақ</span>
+          ${c.is_free?'<span class="free-tag">ТЕГІН</span>':''}
+        </div>
+      </div>
+    </div>`).join('');
+}
+
+async function openCourse(id){
+  const course=allCourses.find(c=>c.id===id);
+  document.getElementById('courseName').textContent=course?.title||'';
+  document.getElementById('coursesView').classList.add('hide');
+  document.getElementById('lessonLayout').classList.add('open');
+  const{data:lessons}=await sb.from('lessons').select('*').eq('course_id',id).order('order_num');
+  const list=document.getElementById('lessonsList');
+  list.innerHTML=(lessons||[]).map((l,i)=>`
+    <div class="lesson-item" id="li-${l.id}" onclick="openLesson(${JSON.stringify(l).replace(/"/g,'&quot;')},${i+1})">
+      <div class="lesson-num">${i+1}</div>
+      <div class="lesson-name">${l.title}</div>
+      ${l.duration_min?`<div class="lesson-dur">${l.duration_min}м</div>`:''}
+    </div>`).join('');
+  if(lessons?.length)openLesson(lessons[0],1);
+}
+
+function openLesson(lesson,num){
+  document.querySelectorAll('.lesson-item').forEach(el=>el.classList.remove('active'));
+  const li=document.getElementById(`li-${lesson.id}`);
+  if(li)li.classList.add('active');
+  let videoHtml='';
+  if(lesson.video_url){
+    const ytId=lesson.video_url.match(/(?:youtube\.com\/watch\?v=|youtu\.be\/)([^&\n?]+)/)?.[1];
+    videoHtml=ytId?`<div class="video-frame"><iframe src="https://www.youtube.com/embed/${ytId}" allowfullscreen></iframe></div>`:
+      `<div class="video-frame"><video controls style="width:100%;height:100%"><source src="${lesson.video_url}"></video></div>`;
+  }
+  let pdfHtml='';
+  if(lesson.pdf_url)pdfHtml=`<div style="margin-bottom:14px"><a href="${lesson.pdf_url}" target="_blank" class="btn btn-outline" style="display:inline-flex;align-items:center;gap:6px;font-size:13px">📄 PDF жүктеу</a></div><iframe src="${lesson.pdf_url}" style="width:100%;height:500px;border:1px solid var(--border);border-radius:var(--r2);margin-bottom:16px"></iframe>`;
+  document.getElementById('lessonContent').innerHTML=`
+    <div class="lesson-title">${num}. ${lesson.title}</div>
+    <div class="lesson-meta">${lesson.duration_min?`<span>⏱ ${lesson.duration_min} минут</span>`:''}</div>
+    ${videoHtml}${pdfHtml}
+    <div class="lesson-body">${lesson.content||'<p style="color:var(--text3)">Мазмұн жоқ</p>'}</div>
+    <div class="lesson-nav">
+      <button class="btn btn-outline" onclick="prevLesson(${num})">← Алдыңғы</button>
+      <button class="btn btn-primary" onclick="nextLesson(${num})">Келесі →</button>
+    </div>`;
+}
+
+function prevLesson(n){const items=document.querySelectorAll('.lesson-item');if(n>1)items[n-2].click()}
+function nextLesson(n){const items=document.querySelectorAll('.lesson-item');if(n<items.length)items[n].click()}
+function showCourses(){document.getElementById('coursesView').classList.remove('hide');document.getElementById('lessonLayout').classList.remove('open')}
+function filterCat(btn,cat){document.querySelectorAll('.cat-tab').forEach(b=>b.classList.remove('active'));btn.classList.add('active');loadCourses(cat)}
+init();
+</script>
+</body>
+</html>
