@@ -285,7 +285,13 @@ nav{position:sticky;top:0;z-index:200;background:rgba(255,255,255,0.95);backdrop
   box-shadow:0 1px 2px rgba(16,40,28,0.05),0 10px 24px -10px rgba(16,40,28,0.18),
     inset 0 1px 0 rgba(255,255,255,0.9),inset 0 -1px 2px rgba(16,40,28,0.04);
 }
-.btn-signup,.hero-btn-main,.form-btn,.cat-tab.active{
+.hero-btn-main{
+  background:linear-gradient(180deg,#ffffff,#f3faf6);
+  border:1px solid rgba(255,255,255,0.8);
+  box-shadow:0 1px 2px rgba(8,40,24,0.12),0 12px 26px -10px rgba(8,40,24,0.35),
+    inset 0 1px 0 #fff,inset 0 -1px 2px rgba(16,40,28,0.04);
+}
+.btn-signup,.form-btn,.cat-tab.active{
   background:linear-gradient(180deg,rgba(255,255,255,0.25),rgba(255,255,255,0) 60%),rgba(10,122,62,0.72);
   border:1px solid rgba(255,255,255,0.4);
   box-shadow:0 1px 2px rgba(8,40,24,0.12),0 12px 26px -10px rgba(10,122,62,0.55),
@@ -300,10 +306,11 @@ nav{position:sticky;top:0;z-index:200;background:rgba(255,255,255,0.95);backdrop
   background:rgba(255,255,255,0.6);
   box-shadow:0 1px 2px rgba(16,40,28,0.04),inset 0 1px 0 rgba(255,255,255,0.8);
 }
-.btn-login:hover,.see-all:hover,.cat-tab:hover,.modal-close:hover{
+.btn-login:hover,.see-all:hover,.cat-tab:hover,.modal-close:hover,.hero-btn-main:hover{
   background:rgba(255,255,255,0.78);transform:translateY(-1px);
 }
-.btn-signup:hover,.hero-btn-main:hover,.form-btn:hover{filter:brightness(1.08);transform:translateY(-1px)}
+.hero-btn-main:hover{background:linear-gradient(180deg,#ffffff,#ffffff)}
+.btn-signup:hover,.form-btn:hover{filter:brightness(1.08);transform:translateY(-1px)}
 .hero-btn-sec:hover{background:linear-gradient(180deg,rgba(255,255,255,0.4),rgba(255,255,255,0.12) 60%);transform:translateY(-1px)}
 .btn-login:active,.btn-signup:active,.hero-btn-main:active,.hero-btn-sec:active,
 .see-all:active,.cat-tab:active,.modal-close:active,.form-btn:active{
