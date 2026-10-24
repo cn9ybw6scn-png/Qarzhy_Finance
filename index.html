@@ -913,7 +913,44 @@ async function fetchCurrency() {
   }
 }
 
-// ── 3. FEAR & GREED — Alternative.me (тегін) ──
+// ── 3. ХАЛЫҚАРАЛЫҚ АКТИВТЕР — Twelve Data (тегін кілтпен) ──
+// Тек бет ашылғанда шақырылады (60 сек. сайын емес) — тегін жоспардың
+// күндік лимитін (800 сұраныс) үнемдеу үшін.
+const GLOBAL_ASSET_MAP = {
+  'SPX':     {sym:'SPX',     name:'S&P 500',      em:'🇺🇸'},
+  'XAU/USD': {sym:'XAU/USD', name:'Алтын',         em:'🥇'},
+  'BRENT':   {sym:'BRN/USD', name:'Brent мұнай',   em:'🛢️'},
+};
+async function fetchGlobalAssets() {
+  if (!CONFIG.TWELVEDATA_KEY || CONFIG.TWELVEDATA_KEY.includes('СІЗДІҢ')) return;
+  try {
+    const symbols = Object.keys(GLOBAL_ASSET_MAP).join(',');
+    const res = await fetch(`https://api.twelvedata.com/quote?symbol=${encodeURIComponent(symbols)}&apikey=${CONFIG.TWELVEDATA_KEY}`);
+    if (!res.ok) throw new Error('Twelve Data қатесі');
+    const data = await res.json();
+    // Бір ғана символ сұралса, API жауапты тікелей объект етіп қайтарады;
+    // бірнеше символ сұралса — {SYMBOL: {...}, ...} түрінде қайтарады.
+    Object.entries(GLOBAL_ASSET_MAP).forEach(([key, meta]) => {
+      const q = data[key];
+      if (!q || q.status === 'error' || q.close == null) return; // қате болса — статикалық баға қалады
+      const price = parseFloat(q.close);
+      const changePct = parseFloat(q.percent_change);
+      if (!isFinite(price) || !isFinite(changePct)) return;
+      const idx = MARKET_DATA.findIndex(m => m.sym === meta.sym);
+      if (idx === -1) return;
+      MARKET_DATA[idx] = {
+        ...MARKET_DATA[idx],
+        price: formatNum(price),
+        ch: (changePct >= 0 ? '+' : '') + changePct.toFixed(2) + '%',
+        up: changePct >= 0,
+      };
+    });
+  } catch(e) {
+    console.warn('Twelve Data:', e.message); // статикалық баға сол күйінде қалады
+  }
+}
+
+// ── 4. FEAR & GREED — Alternative.me (тегін) ──
 async function fetchFearGreed() {
   try {
     const res = await fetch('https://api.alternative.me/fng/?limit=1');
@@ -1191,7 +1228,7 @@ calcConv();
 refreshAuthState();
 
 // API-ларды параллель жүктеу
-Promise.all([fetchCrypto(), fetchCurrency(), fetchFearGreed()]).then(()=>{
+Promise.all([fetchCrypto(), fetchCurrency(), fetchFearGreed(), fetchGlobalAssets()]).then(()=>{
   renderMarket('all');
 });
 
